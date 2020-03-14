@@ -1,11 +1,11 @@
-import sqlite3 as sql
+import sqlite3    as sql
 import constant   as CONSTANT
-import sys,time
-# hàm insert dữ liệu vào databases
-from threading import Lock
-from datetime import datetime
+import time
 
-lock= Lock()
+from threading import Lock
+from datetime  import datetime
+
+lock = Lock()
 
 
 class DataBase():
@@ -122,16 +122,17 @@ class DataBase():
 
     # Đặt vấn đề với querry và getdata : với mảng có dữ liệu cực kì lớn thì sao thì lệnh fetchall sẽ rất lớn theo vượt quá buffer
     # vì vậy phải đọc từng ít một
-    def get_data(self, table_name, pos):
+    def get_data_row(self, table_name, pos):
+
+        table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         lock.acquire(True)
         with self.con:
-            cmd = "SELECT * FROM %s" %table_name #+ " WHERE stt="+ str(pos)
+            cmd = "SELECT * FROM %s" %table + " WHERE stt="+ str(pos)
             self.cur.execute(cmd)
             lock.release()
             self.con.commit()
             data = self.cur.fetchall()
-            # print(data[0][1])
-            # print(data[1])
+        return data
 
     # Query với n cột trong bảng của ngày hôm đó
     def Query(self, table_name, n): # sợ đọc load vào 1 mảng bị tràn mình sẽ chia làm hai sử dụng kiểu ringbuffer - chưa viết đc

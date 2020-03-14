@@ -1,52 +1,36 @@
-from PyQt5.QtCore   import QTimer, QTime, QThread, pyqtSignal, Qt
-from datetime       import datetime   # date_time
+from PyQt5.QtCore   import QTimer, QTime, QThread
 from PyQt5          import QtCore
+from datetime       import datetime   # date_time
 
-import sys, time, os, json, pprint, socket    # library in python
-
-import urllib.request # check xem co mang ko
-
-sys.path.append('modules')# pathname to forder consist modules
-# library programer development
-import constant   as CONSTANT
-# import db_handler as DB
-
-# library programer development
-from gateway import Gateway
-from Lora       import Gateway1
-from qt5        import qt5Class
-
-import threading
-import random
-from datetime import datetime
+import sys, time, json, socket    # library in python
 
 import serial
 import serial.tools.list_ports
-
+import threading, random
 import paho.mqtt.client as mqtt # mqtt
-import db_handler   as SQLite
+
+sys.path.append('modules')# pathname to forder consist modules
+# library programer development
+import constant     as  CONSTANT
+import db_handler   as  SQLite
+
+from gateway    import Gateway
+from Lora       import Gateway1
+from qt5        import qt5Class
+
+
 
 
 # define globale
 Windowns = qt5Class()
-DB = SQLite.DataBase()
+DB       = SQLite.DataBase()
+
 '''
 ---------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
 '''
 
-# MQTT
-
-# MQTT_HOST = 'mqtt://212.237.29.129'
-# MQTT_USER = 'nhungdaika'
-# MQTT_PWD  = '12354'
-# MQTT_TOPIC_SEND    = 'send_data'
-# MQTT_TOPIC_CONTROL = 'controller'
-# MQTT_TOPIC_STATUS  = 'control_status'
-
-# MQTT_TOPIC_BACKUP  = 'backup_data'
-# MQTT_TOPIC_AUTO    = 'auto_data'
-
+#--define MQTT-------------------------------------
 MQTT_HOST = 'smartfarm.tinasoft.com.vn'
 MQTT_USER = 'smartFarm'
 MQTT_PWD  = 'Smartktdt1@123!'
@@ -55,81 +39,90 @@ MQTT_TOPIC_CONTROL = 'controller'
 MQTT_TOPIC_STATUS  = 'control_status'
 
 
-# MQTT_TOPIC_BACKUP  = 'backup_data'
-# MQTT_TOPIC_AUTO    = 'auto_data'
+MQTT_TOPIC_BACKUP  = 'backup_data'
 
+#--end---------------------------------------------
 
-# device: R1 R2
-# status: 1 0
-# dang trong qua trinh xem xet
-# Ham nay se goi ham UpdatePicture() trong file qt5.py,  control_RL() trong file gateway_v1.py
-
+'''
++ hàm điểu khiển thiết bị
+    + UpdatePicture() trong file qt5.py,  
+    + control_RL() trong file gateway_v1.py
+    + get_status() : gửu message trạng thái của relay lên server
+'''
 def ControlDevice(device, status): # kiêu kiểu thế này
     if (device == 1):  # pump1
         if(status == 1):
             # GW_Blue.control_RL(5, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
             # if (check_internet() == 1):
-            get_status(27)    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
-            print("RELAY ON") 
+            # get_status(27)    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            print("RELAY1 ON") 
         elif(status == 0):
             # GW_Blue.control_RL(5, 0)
             Windowns.UpdatePicture(device, status)
             # if (check_internet() == 1):
-            get_status(27)
-            print("RELAY OFF") 
+            # get_status(27)
+            print("RELAY1 OFF") 
         else:
             pass
     elif(device == 2): # lamp1
         if(status == 1):
-        #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
-                    Windowns.UpdatePicture(device, status) # thay đổi trên app
+            # GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
+            Windowns.UpdatePicture(device, status) # thay đổi trên app
         #            if (check_internet() == 1):
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            print("RELAY2 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
-                    Windowns.UpdatePicture(device, status)
+            Windowns.UpdatePicture(device, status)
         #            if (check_internet() == 1):
         #                get_status_all()
+            print("RELAY2 OFF") 
         else:
             pass
     elif(device == 3): # pump2
         if(status == 1):
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
-                    Windowns.UpdatePicture(device, status) # thay đổi trên app
+            Windowns.UpdatePicture(device, status) # thay đổi trên app
         #            if (check_internet() == 1):
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            print("RELAY3 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
-                    Windowns.UpdatePicture(device, status)
+            Windowns.UpdatePicture(device, status)
         #            if (check_internet() == 1):
         #                get_status_all()
+            print("RELAY3 OFF") 
         else:
             pass
     elif(device == 4): # lamp2
         if(status == 1):
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
-                    Windowns.UpdatePicture(device, status) # thay đổi trên app
+            Windowns.UpdatePicture(device, status) # thay đổi trên app
         #            if (check_internet() == 1):
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            print("RELAY4 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
-                    Windowns.UpdatePicture(device, status)
+            Windowns.UpdatePicture(device, status)
         #            if (check_internet() == 1):
         #                get_status_all()
+            print("RELAY4 OFF") 
         else:
             pass
     elif(device == 5): # pump3
         if(status == 1):
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
-                    Windowns.UpdatePicture(device, status) # thay đổi trên app
+            Windowns.UpdatePicture(device, status) # thay đổi trên app
         #            if (check_internet() == 1):
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            print("RELAY5 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
-                    Windowns.UpdatePicture(device, status)
+            Windowns.UpdatePicture(device, status)
         #            if (check_internet() == 1):
         #                get_status_all()
+            print("RELAY5 OFF") 
         else:
             pass 
     else:
@@ -146,6 +139,9 @@ def ControlDevice(device, status): # kiêu kiểu thế này
         else:
             pass
 
+'''
+    + lấy trạng thái của tất cả thiết bị relay
+'''
 def get_status_all(): # lấy trạng thái hiện tại của thiet bi
     # global client, GW_Blue
     # payload_data = {
@@ -183,20 +179,25 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
     #     pass
     pass
 
+
+'''
+    + lấy trạng thái của từng relay
+'''
 def get_status(pos): # lấy trạng thái hiện tại của thiet bi
     global client, GW_Blue
 
-    CONSTANT.DATA_G01["NODE" + str(pos)]["value"]     = GW_Blue.get_status_RL(pos, 1)
-    CONSTANT.DATA_G01["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(pos, CONSTANT.SENSOR["relay"])
-    CONSTANT.DATA_G01["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(pos, CONSTANT.SENSOR["relay"])
-    payload_data = {
-        'sub_id': "G05",
-        "relay_1": {
-            "RF_signal": CONSTANT.DATA_G01["NODE" + str(pos)]["RF_signal"],
-            'value': str(CONSTANT.DATA_G01["NODE" + str(pos)]["value"]),
-            'battery': 100
-        }
-    }
+    # CONSTANT.DATA_G01["NODE" + str(pos)]["value"]     = GW_Blue.get_status_RL(pos, 1)
+    # CONSTANT.DATA_G01["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(pos, CONSTANT.SENSOR["relay"])
+    # CONSTANT.DATA_G01["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(pos, CONSTANT.SENSOR["relay"])
+    # payload_data = {
+    #     'sub_id': "G05",
+    #     "relay_1": {
+    #         "RF_signal": CONSTANT.DATA_G01["NODE" + str(pos)]["RF_signal"],
+    #         'value': str(CONSTANT.DATA_G01["NODE" + str(pos)]["value"]),
+    #         'battery': 100
+    #     }
+    # }
+
     if (check_internet() == True): 
         DB.insert_data_row("nongtrai_G00", pos, CONSTANT.DATA_G00["NODE" + str(pos)]["id"],"RELAY",
         CONSTANT.DATA_G00["NODE" + str(pos)]["value"], CONSTANT.DATA_G00["NODE" + str(pos)]["RF_signal"], 100, 
@@ -225,39 +226,29 @@ def on_message(client, userdata, msg):  # received data - chua code xong
     if ("relay_1" in data): 
         if (data['relay_1']['value'] == '1'):
             ControlDevice(1, 1)
-            # get_status() - feedback lai
         if (data['relay_1']['value'] == '0'):
             ControlDevice(1, 0)
-            # get_status()
     if ("relay_2" in data):
         if (data['relay_2']['value'] == '1'):
             ControlDevice(2, 1)
-            # get_status()
         if (data['relay_2']['value'] == '0'):
             ControlDevice(2, 0)
             print("Máy 2 OFF")
-            # get_status()
     if ("relay_3" in data):
         if (data['relay_3']['value'] == '1'):
             ControlDevice(3, 1)
-            # get_status()
         if (data['relay_3']['value'] == '0'):
             ControlDevice(3, 0)
-            # get_status()
     if ("relay_4" in data):
         if (data['relay_4']['value'] == '1'):
             ControlDevice(4, 1)
-            # get_status()
         if (data['relay_4']['value'] == '0'):
             ControlDevice(4, 0)
-            # get_status()
     if ("relay_5" in data):
         if (data['relay_5']['value'] == '1'):
             ControlDevice(5, 1)
-            # get_status()
         if (data['relay_5']['value'] == '0'):
             ControlDevice(5, 0)
-            # get_status()
 
 def Init_UI(): # khởi tạo GateWay_Xanh
     global GW_Blue
@@ -320,7 +311,6 @@ def Init_Lora(): # khoi tao GateWay do
         QMessageBox.critical(app, "LỖI KẾT NỐI COM",
                                   "KHÔNG THỂ KẾT NỐI")
 
-
 def check_internet():   # kiểm tra internet
     try:
         # connect to the host -- tells us if the host is actually
@@ -330,7 +320,6 @@ def check_internet():   # kiểm tra internet
     except OSError:
         pass
     return False
-
 
 def read_data():
     global check, GW_Red, client, GW_Blue, app
@@ -429,7 +418,6 @@ def read_data():
     except:
         pass  
      
-
 def Update_GatewayRed():
     global GW_Red, client, Windowns
     now = datetime.now()
@@ -455,9 +443,8 @@ def Update_GatewayRed():
     for i in range(1, 3):
         Windowns.Update_PH(CONSTANT.DATA, i)
 
-
 def Update_GatewayBlue():
-    # global GW_Blue,Windowns
+    global GW_Blue, Windowns
     # # Trang trại G00
 
     # # cảm biến độ ẩm đất 
@@ -549,6 +536,7 @@ def Update_GatewayBlue():
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
     # humidity
     for i in range(21, 23):
+        node = i
         if(i==21):
             CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
@@ -585,6 +573,7 @@ def Update_GatewayBlue():
             pass
     #light
     for i in range(23, 25):
+        node = i
         if(i==23):
             CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
@@ -621,6 +610,7 @@ def Update_GatewayBlue():
             pass
     #temperature
     for i in range(25, 27):
+        node = i
         if(i==25):
             CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
@@ -656,8 +646,12 @@ def Update_GatewayBlue():
         else:
             pass
 
+
+
+    # update GUI
     for i in range(1, 11):
         Windowns.Update_SM(CONSTANT.DATA_G00, i, "G00")
+
     for i in range(11, 21):
         Windowns.Update_SM(CONSTANT.DATA_G01, i, "G01")
 
@@ -672,12 +666,12 @@ def Update_GatewayBlue():
 
     Windowns.Update_RF_Relay(CONSTANT.DATA_G00)
 
-    # client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
-    # client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
+    # send message to server
+    client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
+    client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
     # print(CONSTANT.DATA_G00)
     # print(CONSTANT.DATA_G01)
         
-
 # nên ghi vào một file text rồi đọc ra
 def requirePort(): # Xac dinh COM 
     global GW_Blue_NAME, GW_Red_NAME 
@@ -695,11 +689,13 @@ def requirePort(): # Xac dinh COM
     # # Đóng file
     # file.close()
 
+
+
+#---define thread-------------------------------------------------------------------------------------------------
 # 0 1 -  khoi dau
 # 0 0 -  dung
 # 1 1 -  chay
 # 1 0 - reserve
-
 def Thread_pump1(): # flag_pump1 = 0 - chưa bật máy bơm, chưa đếm lùi - nếu flag_pump1 = 1 thì ko làm gì cả
     # bỏ cờ flag_pump1,flag_pump1_N=> khi mà điều kiện true. sẽ ra lệnh bệnh máy bơm nhiều lần
     if((CONSTANT.flag_pump1 == 0) & (CONSTANT.flag_pump1_N == 1)): 
@@ -783,6 +779,86 @@ def Thread_lamp2():
     else:
         pass
 
+
+# theard sẽ chạy background - backup data khi mất mạng
+class YouThread(QtCore.QThread): # inheritance
+    
+    def __init__(self, parent=None):
+        QtCore.QThread.__init__(self, parent)
+
+    # 0 - 1 : start
+    # 0 - 0 : running
+    # 1 - 1 : có vết backup
+    # 1 - 0 : có vết backup
+    def run(self): #  background task - chạy ngầm để gửu dữ liệu : this is non-daemon thread. if use daemon : either complete or killed when main thread exits.
+        while(True): # note daemon sử dụng khi : you don’t mind if it doesn’t complete or left in between.
+            if(check_internet() == False): # khi mat mang se backup
+                if((CONSTANT.flag_backup == 0) & (CONSTANT.flag_backup_N == 1)): # danh dau khi mat mang
+                    DB.creaat_table("backup_nongtrai_G00")
+                    DB.creaat_table("backup_nongtrai_G01")
+                    CONSTANT.posBackup_G00   = DB.find_pos("backup_nongtrai_G00")
+                    CONSTANT.posBackup_G01   = DB.find_pos("backup_nongtrai_G01")
+                    print(CONSTANT.posBackup_G00)
+                    print(CONSTANT.posBackup_G01)
+                    CONSTANT.flag_backup = 1
+                    CONSTANT.flag_backup_N = 0
+                else:
+                    pass          
+            else:                           # khi co mang se day len 
+                if((CONSTANT.flag_backup == 1) & (CONSTANT.flag_backup_N == 0)):
+                    max_G00 = DB.find_pos("backup_nongtrai_G00")
+                    max_G01 = DB.find_pos("backup_nongtrai_G01")
+
+                    Windowns.app.label_2.show()
+                    Windowns.app.label_2.setText("Đang đồng bộ")
+                    time.sleep(1)
+                    for i in range(CONSTANT.posBackup_G00, max_G00+1):
+                        DB.update_data("backup_nongtrai_G00", i, "ok")
+                        data = DB.get_data_row("backup_nongtrai_G00", i)
+                        payload = {
+                            'sub_id' : 'G00',
+                            'node'   : data[0][1],
+                            'name'   : data[0][2],
+                            'id'     : data[0][3],
+                            'value'  : data[0][4],
+                            'RF_signal'  : data[0][5],
+                            'battery'    : data[0][6],
+                            'time'       : data[0][7],
+                            'syn'        : data[0][8]
+                        }
+                        client.publish(MQTT_TOPIC_BACKUP, json.dumps(payload))
+                        # print(json.dumps(payload))
+                    for i in range(CONSTANT.posBackup_G01, max_G01+1):
+                        DB.update_data("backup_nongtrai_G01", i, "ok")
+                        data = DB.get_data_row("backup_nongtrai_G01", i)
+                        payload = {
+                            'sub_id' : 'G01',
+                            'node'   : data[0][1],
+                            'name'   : data[0][2],
+                            'id'     : data[0][3],
+                            'value'  : data[0][4],
+                            'RF_signal'  : data[0][5],
+                            'battery'    : data[0][6],
+                            'time'       : data[0][7],
+                            'syn'        : data[0][8]
+                        }
+                        client.publish(MQTT_TOPIC_BACKUP, json.dumps(payload))
+                        # print(json.dumps(payload))
+                    Windowns.app.label_2.hide()
+
+                    # đẩy lên server
+                    CONSTANT.flag_backup = 0
+                    CONSTANT.flag_backup_N = 1  
+                else:
+                    pass
+
+thread = YouThread() 
+thread.start()
+
+#---end------------------------------------------------------------------------------------------------
+
+
+
 def Init_Thread():
     CONSTANT.Thread_pump1.timeout.connect(Thread_pump1)
     CONSTANT.Thread_pump1.start(100)
@@ -820,59 +896,14 @@ def Init_Button():
     Windowns.app.tab2_btn_r5off.clicked.connect(lambda:ControlDevice(5, 0))
     Windowns.app.tab2_btn_r5on.clicked.connect(lambda:ControlDevice(5, 1))  
 
-#theard này cho lúc mất mạng - or la su dung timer di
-class YouThread(QtCore.QThread): # inheritance
-    
-    def __init__(self, parent=None):
-        QtCore.QThread.__init__(self, parent)
 
-    # 0 - 1 : start
-    # 0 - 0 : running
-    # 1 - 1 : có vết backup
-    # 1 - 0 : có vết backup
-    def run(self): #  background task - chạy ngầm để gửu dữ liệu : this is non-daemon thread. if use daemon : either complete or killed when main thread exits.
-        while(True): # note daemon sử dụng khi : you don’t mind if it doesn’t complete or left in between.
-            if(check_internet() == False): # khi mat mang se backup
-                if((CONSTANT.flag_backup == 0) & (CONSTANT.flag_backup_N == 1)): # danh dau khi mat mang
-                    DB.creaat_table("backup_nongtrai_G00")
-                    DB.creaat_table("backup_nongtrai_G01")
-                    CONSTANT.posBackup_G00   = DB.find_pos("backup_nongtrai_G00")
-                    CONSTANT.posBackup_G01   = DB.find_pos("backup_nongtrai_G01")
-                    print(CONSTANT.posBackup_G00)
-                    print(CONSTANT.posBackup_G01)
-                    CONSTANT.flag_backup = 1
-                    CONSTANT.flag_backup_N = 0
-                else:
-                    pass          
-            else:                           # khi co mang se day len 
-                if((CONSTANT.flag_backup == 1) & (CONSTANT.flag_backup_N == 0)):
-                    max_G00 = DB.find_pos("backup_nongtrai_G00")
-                    max_G01 = DB.find_pos("backup_nongtrai_G01")
-
-                    Windowns.app.label_2.show()
-                    Windowns.app.label_2.setText("Đang đồng bộ")
-                    time.sleep(1)
-                    for i in range(CONSTANT.posBackup_G00, max_G00+1):
-                        DB.update_data("backup_nongtrai_G00", i, "ok")
-                    for i in range(CONSTANT.posBackup_G01, max_G01+1):
-                        DB.update_data("backup_nongtrai_G01", i, "ok")
-                    Windowns.app.label_2.hide()
-                    # đẩy lên server
-                    # client.publish(MQTT_TOPIC_BACKUP, json.dumps(payload_data))
-                    CONSTANT.flag_backup = 0
-                    CONSTANT.flag_backup_N = 1  
-                else:
-                    pass
-
-thread = YouThread() 
-thread.start()
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
     # requirePort()
     # Init_UI()
     # Init_Lora()
     Init_Button()
-    # Init_Thread()
+    Init_Thread()
 
 # test mqtt------------------------------------
     if (check_internet() == True): # kiểm tra internet nếu có gửu cho a vững

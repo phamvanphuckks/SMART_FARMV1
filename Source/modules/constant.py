@@ -4,7 +4,7 @@ import random
 
 # countdown
 
-global TIME,DEVICE
+global TIME, DEVICE
 
 TIME = {
     "pump1" : {"second":10, "minute":0},
@@ -120,6 +120,8 @@ DATA_G02 = {
     "NODE31": {"name": "relay5", "id":0,  "value" : 0, "battery": 99, "RF_signal":"", "time":"", "syn":"error"}
 }
 
+
+global SENSOR, BATTERY, RSSI
 SENSOR = {
     "soil_moistrure" : 1,
     "humidity"       : 2,
@@ -140,6 +142,7 @@ RSSI = {
     "1": "bad"
 }
 
+global PH, T, H, SM
 
 L = {
     'min': 30,
@@ -162,7 +165,7 @@ SM = {
     'max': 60
 } 
 
-TIME_OUT = 4000
+global GW_Blue_NAME, GW_Red_NAME
 
 # name GW default - tên này có thể thay đổi nếu port thay đổi
 GW_Blue_NAME  = "COM3"        # GateWay(Xanh) : thu dữ liệu của bọn đại việt và điều khiển máy bơm

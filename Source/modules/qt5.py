@@ -15,7 +15,6 @@ class qt5Class():
         self.LCD_Number()
         self.Upadte_Pin_Relay()
         self.initialize()
-        # self.Upadte_Pin()
         # self.Update_PinRF()
 
     def initialize(self): # khi mình khởi động off hết
