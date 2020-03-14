@@ -1,0 +1,11 @@
+.\objects\ph.o: ..\src\ph.c
+.\objects\ph.o: ..\inc\user_lib\ph.h
+.\objects\ph.o: ..\inc\LIB\STM32L1xx_StdPeriph_Driver\inc\stm32l1xx_adc.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Device\ST\STM32L1xx\Include\stm32l1xx.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Device\ST\STM32L1xx\Include\stm32l1xx_conf.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Include\core_cm3.h
+.\objects\ph.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Include\core_cmInstr.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Include\core_cmFunc.h
+.\objects\ph.o: ..\inc\LIB\CMSIS\Device\ST\STM32L1xx\Include\system_stm32l1xx.h
+.\objects\ph.o: ..\inc\LIB\STM32L1xx_StdPeriph_Driver\inc\stm32l1xx_rcc.h

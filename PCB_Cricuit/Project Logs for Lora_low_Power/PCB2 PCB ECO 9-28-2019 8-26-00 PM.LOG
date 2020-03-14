@@ -1,0 +1,16 @@
+Removed Pin From Net: NetName=RH_EN Pin=IC1-15
+Removed Pin From Net: NetName=SHT75_EN Pin=IC1-16
+Removed Pin From Net: NetName=MOSITURE EN Pin=IC1-19
+Removed Pin From Net: NetName=SCK Pin=IC1-25
+Removed Pin From Net: NetName=DATA Pin=IC1-26
+Removed Pin From Net: NetName=RE Pin=IC1-27
+Removed Pin From Net: NetName=DE Pin=IC1-28
+Removed Pin From Net: NetName=I2C_EN Pin=IC1-41
+Added Pin To Net: NetName=RH_EN Pin=IC1-14
+Added Pin To Net: NetName=SCK Pin=IC1-15
+Added Pin To Net: NetName=DATA Pin=IC1-16
+Added Pin To Net: NetName=I2C_EN Pin=IC1-19
+Added Pin To Net: NetName=MOSITURE EN Pin=IC1-25
+Added Pin To Net: NetName=RE Pin=IC1-26
+Added Pin To Net: NetName=DE Pin=IC1-27
+Added Room: Name=Sheet2

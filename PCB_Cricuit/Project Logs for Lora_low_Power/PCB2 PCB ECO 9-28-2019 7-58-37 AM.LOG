@@ -1,0 +1,7 @@
+Added Component: Designator=IC2(SOT23A)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=GND Pin=IC2-1
+Added Pin To Net: NetName=Vin Pin=IC2-2
+Added Pin To Net: NetName=VCC Pin=IC2-3
+Added Member To Class: ClassName=Sheet2 Member=Component IC2 HT133
+Added Room: Name=Sheet2

@@ -1,0 +1,7 @@
+Added Component: Designator=R11(RES 0805/2012)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Value"; Value = "1K"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetQ1_3 Pin=R11-1
+Added Pin To Net: NetName=ADC_EN Pin=R11-2
+Added Member To Class: ClassName=Sheet2 Member=Component R11 100
+Added Room: Name=Sheet2

@@ -1,0 +1,4 @@
+Added Pin To Net: NetName=SHT75_EN Pin=IC1-11
+Added Member To Class: ClassName=Sheet2 Member=Component SW2 RST
+Added Member To Class: ClassName=Sheet2 Member=Component SW4 RST
+Added Room: Name=Sheet2

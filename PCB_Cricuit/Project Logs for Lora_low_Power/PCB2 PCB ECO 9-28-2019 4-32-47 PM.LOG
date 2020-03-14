@@ -1,0 +1,12 @@
+Added Component: Designator=U7(MODULE MAX485)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=TXD3 Pin=U7-1
+Added Pin To Net: NetName=RE Pin=U7-2
+Added Pin To Net: NetName=DE Pin=U7-3
+Added Pin To Net: NetName=RXD3 Pin=U7-4
+Added Pin To Net: NetName=GND Pin=U7-5
+Added Pin To Net: NetName=NetJ3_3 Pin=U7-6
+Added Pin To Net: NetName=NetJ3_2 Pin=U7-7
+Added Pin To Net: NetName=NetJ3_1 Pin=U7-8
+Added Member To Class: ClassName=Sheet2 Member=Component U7 MAX485 MODULE
+Added Room: Name=Sheet2
