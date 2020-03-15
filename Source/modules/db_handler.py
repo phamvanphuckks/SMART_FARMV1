@@ -14,9 +14,6 @@ class DataBase():
         self.con  = sql.connect(self.path, check_same_thread=False)
         self.cur  = self.con.cursor()
 
-    def initialize(self):
-        pass
-
     def creaat_table(self, place):
         lock.acquire(True)
         table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
@@ -170,6 +167,7 @@ class DataBase():
                 else:
                     pass
             self.cur.executescript(cmd)
+            self.con.commit()
             lock.release()
         
 

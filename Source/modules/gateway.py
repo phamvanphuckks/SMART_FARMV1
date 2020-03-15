@@ -172,7 +172,7 @@ class Gateway():
         1 is on, 0 is off
     '''
 #test realy--------------------------------------------------------------------------------------------
-    #   pos : thứ tự
+    #   pos : thứ tự relay trong gateway
     #   option : từng chân relay trong module relay
     def control_RL(self, pos, option, status): # control realy
         try:

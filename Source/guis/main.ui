@@ -36,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../icons/k.ico</normaloff>../icons/k.ico</iconset>
+    <normaloff>../icons/sfarm.ico</normaloff>../icons/sfarm.ico</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">border-color: rgb(0, 85, 255);</string>
@@ -48,8 +48,8 @@
    <widget class="QLabel" name="lbl_internet">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>40</y>
+      <x>730</x>
+      <y>50</y>
       <width>301</width>
       <height>41</height>
      </rect>
@@ -4723,43 +4723,13 @@ border-color:rgb(0, 170, 255); </string>
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_C_6">
-    <property name="geometry">
-     <rect>
-      <x>1130</x>
-      <y>30</y>
-      <width>51</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Courier New</family>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius:25px;
-border: 2px solid rgb(0, 255, 0);
-background-color: rgb(46, 102, 9);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>1090</x>
       <y>80</y>
       <width>91</width>
-      <height>51</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -4769,9 +4739,27 @@ background-color: rgb(46, 102, 9);</string>
      <string>Đang đồng bộ</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>10</y>
+      <width>101</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../icons/Backup.png</pixmap>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons/test.qrc"/>
+ </resources>
  <connections/>
 </ui>

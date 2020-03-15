@@ -12,10 +12,14 @@ class qt5Class():
         self.App = QtWidgets.QApplication([])
         self.app = uic.loadUi("guis\\main.ui")
         self.app.closeEvent = self.closeEvent # khi close, gọi sự kiện closeEvent
+        self.app.label_12.hide()
         self.LCD_Number()
         self.Upadte_Pin_Relay()
         self.initialize()
-        # self.Update_PinRF()
+        # self.Update_RF_Relay()
+
+    def debugg(self, error, information):
+        QMessageBox.critical(self.app, error, information)
 
     def initialize(self): # khi mình khởi động off hết
         for i in range(1, 6):
@@ -435,16 +439,12 @@ class qt5Class():
     def display_internet(self, option):
         if (option == 1):
             self.app.lbl_internet.hide()
-            self.app.lbl_C_6.hide()
 
         else:
             self.app.lbl_internet.setStyleSheet( # lable kết nối
                 "QLabel {color: red; border-radius: 9px;   border: 2px solid red}")
             self.app.lbl_internet.setText("KHÔNG CÓ INTERNET")
-            # self.app.lbl_C_6.setStyleSheet( # hinh tron do
-            #     "QLabel{ border-radius:25px; border: 2px solid red; background-color: rgb(255, 0, 0)}"
-            # )
-            self.app.lbl_C_6.hide()
+
 
 
     def chang_status_RL(self, device, status):
