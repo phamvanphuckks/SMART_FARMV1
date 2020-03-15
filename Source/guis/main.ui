@@ -4762,14 +4762,14 @@ background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="font">
        <font>
+        <pointsize>14</pointsize>
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 20px;
-color : rgb(0, 255, 0)</string>
+       <string notr="true">color : rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>NULL</string>
@@ -4784,9 +4784,13 @@ color : rgb(0, 255, 0)</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
-       <string notr="true">font: 20px;
-color : rgb(0, 255, 0)</string>
+       <string notr="true">color : rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>NULL</string>
@@ -4801,9 +4805,16 @@ color : rgb(0, 255, 0)</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="styleSheet">
-       <string notr="true">font: 20px;
-color : rgb(0, 255, 0)</string>
+       <string notr="true">color : rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>NULL</string>
@@ -4818,9 +4829,16 @@ color : rgb(0, 255, 0)</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="styleSheet">
-       <string notr="true">font: 20px;
-color : rgb(0, 255, 0)</string>
+       <string notr="true">color : rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>NULL</string>
@@ -4835,9 +4853,16 @@ color : rgb(0, 255, 0)</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="styleSheet">
-       <string notr="true">font: 20px;
-color : rgb(0, 255, 0)</string>
+       <string notr="true">color : rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>NULL</string>

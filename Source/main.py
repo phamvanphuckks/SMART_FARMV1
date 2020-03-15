@@ -698,7 +698,8 @@ def Update_GatewayBlue():
         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
     else:
-        Windowns.debugg("Lỗi kết nối", "Không có internet")
+        # Windowns.debugg("Lỗi kết nối", "Không có internet")
+        print("khong co mang")
         pass
     # print(CONSTANT.DATA_G00)
     # print(CONSTANT.DATA_G01)
