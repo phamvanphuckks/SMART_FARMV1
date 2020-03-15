@@ -816,20 +816,14 @@ def Thread_lamp2():
     else:
         pass
 
-def Internet():
-    while(True):
-        if (check_internet() == True): 
-            display_internet(1)
-        else:
-            display_internet(0)
-
 def Synchronous():
     global client
     Windowns.app.label_12.show()
     Windowns.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
     Windowns.app.label_2.show()
     Windowns.app.label_2.setText("Đang đồng bộ")
-    Windowns.app.label_2.setStyleSheet("QLabel {color:rgb(0, 170, 0)}")    
+    Windowns.app.label_2.setStyleSheet("QLabel {color:rgb(0, 170, 0)}")  
+
     max_G00 = DB.find_pos("backup_nongtrai_G00")
     max_G01 = DB.find_pos("backup_nongtrai_G01")
     Init_mqtt()
@@ -930,6 +924,8 @@ class YouThread(QtCore.QThread): # inheritance
         while(True): # note daemon sử dụng khi : you don’t mind if it doesn’t complete or left in between.
             if(check_internet() == False): # khi mat mang se backup
                 if((CONSTANT.flag_backup == 0) & (CONSTANT.flag_backup_N == 1)): # danh dau khi mat mang
+                    Windowns.display_internet(0)
+
                     Backup()
            
                 else:
@@ -939,6 +935,7 @@ class YouThread(QtCore.QThread): # inheritance
                 # message backup -  CONSTANT.DATAG00 or  CONSTANT.DATAG00
 
                 if((CONSTANT.flag_backup == 1) & (CONSTANT.flag_backup_N == 0)):
+                    Windowns.display_internet(1)
                     Synchronous()
 
                 else:

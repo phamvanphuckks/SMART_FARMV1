@@ -441,7 +441,8 @@ class qt5Class():
             self.app.lbl_internet.hide()
 
         else:
-            self.app.lbl_internet.setStyleSheet( # lable kết nối
+            self.app.lbl_internet.show()
+            self.app.lbl_internet.setStyleSheet(
                 "QLabel {color: red; border-radius: 9px;   border: 2px solid red}")
             self.app.lbl_internet.setText("KHÔNG CÓ INTERNET")
 
