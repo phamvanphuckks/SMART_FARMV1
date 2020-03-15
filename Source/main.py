@@ -698,6 +698,7 @@ def Update_GatewayBlue():
         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
     else:
+        Windowns.debugg("Lỗi kết nối", "Không có internet")
         pass
     # print(CONSTANT.DATA_G00)
     # print(CONSTANT.DATA_G01)
@@ -925,9 +926,7 @@ class YouThread(QtCore.QThread): # inheritance
             if(check_internet() == False): # khi mat mang se backup
                 if((CONSTANT.flag_backup == 0) & (CONSTANT.flag_backup_N == 1)): # danh dau khi mat mang
                     Windowns.display_internet(0)
-
                     Backup()
-           
                 else:
                     pass          
             else:   
@@ -937,7 +936,6 @@ class YouThread(QtCore.QThread): # inheritance
                 if((CONSTANT.flag_backup == 1) & (CONSTANT.flag_backup_N == 0)):
                     Windowns.display_internet(1)
                     Synchronous()
-
                 else:
                     pass
 

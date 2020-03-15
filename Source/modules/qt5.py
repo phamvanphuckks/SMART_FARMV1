@@ -14,7 +14,7 @@ class qt5Class():
         self.app.closeEvent = self.closeEvent # khi close, gọi sự kiện closeEvent
         self.app.label_12.hide()
         self.LCD_Number()
-        self.Upadte_Pin_Relay()
+#        # self.Upadte_Pin_Relay()
         self.initialize()
         # self.Update_RF_Relay()
 
@@ -413,14 +413,29 @@ class qt5Class():
     # hướng phát triển của 2 function này
     # đầu vào sẽ nhận hàm data_payload, option sẽ là thứ tự của các relay
     def Upadte_Pin_Relay(self):
-        self.app.tab2_pin1.setText("Pin : 100" )
-        self.app.tab2_pin2.setText("Pin : 100" )
-        self.app.tab2_pin3.setText("Pin : 100" )
-        self.app.tab2_pin4.setText("Pin : 100" )
-        self.app.tab2_pin5.setText("Pin : 100" )
+        self.app.label_42.setText("0" )
+        self.app.label_43.setText("0" )
+        self.app.label_44.setText("0" )
+        self.app.label_45.setText("0" )
+        self.app.label_46.setText("0" )
 
     def Update_RF_Relay(self, data_payload):
-        self.app.tab2_th1.setText("TÍN HIỆU" + str(data_payload["NODE27"]["RF_signal"]))
+        if(data_payload["NODE27"]["RF_signal"] == "Perfect"):
+            self.app.tab2_th1.setStyleSheet(
+                        "QLabel {color:rgb(0, 255, 0); font: 14pt 'MS Shell Dlg 2'}")
+        elif(data_payload["NODE27"]["RF_signal"] == "Good"):
+            self.app.tab2_th1.setStyleSheet(
+                        "QLabel {color:rgb(131, 199, 93)}")
+        elif(data_payload["NODE27"]["RF_signal"] == "Medium"):
+            self.app.tab2_th1.setStyleSheet(
+                        "QLabel {color:rgb(255, 255, 0)}")
+        elif(data_payload["NODE27"]["RF_signal"] == "Bad"):
+            self.app.tab2_th1.setStyleSheet(
+                        "QLabel {color:rgb(255, 0, 0)}")
+        else:
+            pass
+        self.app.tab2_th1.setText(str(data_payload["NODE27"]["RF_signal"]))
+
         # self.app.tab2_th2.setText("TÍN HIỆU" + str(data_payload["NODE28"]["RF_signal"]))
         # self.app.tab2_th3.setText("TÍN HIỆU" + str(data_payload["NODE29"]["RF_signal"]))
         # self.app.tab2_th4.setText("TÍN HIỆU" + str(data_payload["NODE30"]["RF_signal"]))

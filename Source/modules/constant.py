@@ -87,7 +87,7 @@ DATA_G00 = {
     "NODE25": {"name": "temperature1",      "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE32": {"name": "ph1",               "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
 
-    "NODE27": {"name": "relay1", "id":0,  "value" : 0, "battery": 99, "RF_signal":"", "time":"", "syn":"error"}
+    "NODE27": {"name": "relay1", "id":0,  "value" : 0, "battery": 99, "RF_signal":"Perfect", "time":"", "syn":"error"}
 }
 
 DATA_G01 = {
@@ -136,10 +136,10 @@ BATTERY = {
     '99': "Full Battery"
 }
 RSSI = {
-    "4": "perfect",
-    "3": "good",
-    "2": "medium",
-    "1": "bad"
+    "4": "Perfect",
+    "3": "Good",
+    "2": "Medium",
+    "1": "Bad"
 }
 
 global PH, T, H, SM
