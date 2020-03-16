@@ -14,7 +14,6 @@ class qt5Class():
         self.app.closeEvent = self.closeEvent # khi close, gọi sự kiện closeEvent
         self.app.label_12.hide()
         self.LCD_Number()
-#        # self.Upadte_Pin_Relay()
         self.initialize()
         # self.Update_RF_Relay()
 
@@ -410,14 +409,7 @@ class qt5Class():
         else:
             pass
 
-    # hướng phát triển của 2 function này
-    # đầu vào sẽ nhận hàm data_payload, option sẽ là thứ tự của các relay
-    def Upadte_Pin_Relay(self):
-        self.app.label_42.setText("0" )
-        self.app.label_43.setText("0" )
-        self.app.label_44.setText("0" )
-        self.app.label_45.setText("0" )
-        self.app.label_46.setText("0" )
+
 
     def Update_RF_Relay(self, data_payload):
         if(data_payload["NODE27"]["RF_signal"] == "Perfect"):
@@ -460,8 +452,6 @@ class qt5Class():
             self.app.lbl_internet.setStyleSheet(
                 "QLabel {color: red; border-radius: 9px;   border: 2px solid red}")
             self.app.lbl_internet.setText("KHÔNG CÓ INTERNET")
-
-
 
     def chang_status_RL(self, device, status):
         if (device == 1):

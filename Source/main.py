@@ -32,25 +32,25 @@ DB       = SQLite.DataBase()
 '''
 
 #--define MQTT--------------------------------------
-# MQTT_HOST = 'smartfarm.tinasoft.com.vn'
-# MQTT_USER = 'smartFarm'
-# MQTT_PWD  = 'Smartktdt1@123!'
-# MQTT_TOPIC_SEND    = 'send_data'
-# MQTT_TOPIC_CONTROL = 'controller'
-# MQTT_TOPIC_STATUS  = 'control_status'
-
-
-# MQTT_TOPIC_BACKUP  = 'backup_data'
-
-MQTT_HOST = 'm15.cloudmqtt.com'
-MQTT_USER = 'oubgjadg'
-MQTT_PWD  = '8nmDRhgOpXZh'
+MQTT_HOST = 'smartfarm.tinasoft.com.vn'
+MQTT_USER = 'smartFarm'
+MQTT_PWD  = 'Smartktdt1@123!'
 MQTT_TOPIC_SEND    = 'send_data'
 MQTT_TOPIC_CONTROL = 'controller'
 MQTT_TOPIC_STATUS  = 'control_status'
 
 
 MQTT_TOPIC_BACKUP  = 'backup_data'
+
+# MQTT_HOST = 'm15.cloudmqtt.com'
+# MQTT_USER = 'oubgjadg'
+# MQTT_PWD  = '8nmDRhgOpXZh'
+# MQTT_TOPIC_SEND    = 'send_data'
+# MQTT_TOPIC_CONTROL = 'controller'
+# MQTT_TOPIC_STATUS  = 'control_status'
+
+
+# MQTT_TOPIC_BACKUP  = 'backup_data'
 
 
 #--end----------------------------------------------
@@ -64,14 +64,14 @@ MQTT_TOPIC_BACKUP  = 'backup_data'
 def ControlDevice(device, status): # kiêu kiểu thế này
     if (device == 1):  # pump1
         if(status == 1):
-            # GW_Blue.control_RL(5, 1) # GateWay(Xanh) điểu khiển Relay 
+            #GW_Blue.control_RL(5, 1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
-            get_status(5)    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            get_status(27)    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
             print("RELAY1 ON") 
         elif(status == 0):
-            # GW_Blue.control_RL(5, 0)
+            #GW_Blue.control_RL(5, 1, 0)
             Windowns.UpdatePicture(device, status)
-            get_status(5)
+            get_status(27)
             print("RELAY1 OFF") 
         else:
             pass
@@ -80,11 +80,13 @@ def ControlDevice(device, status): # kiêu kiểu thế này
             # GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            get_status(28)
             print("RELAY2 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
             Windowns.UpdatePicture(device, status)
         #                get_status_all()
+            get_status(28)
             print("RELAY2 OFF") 
         else:
             pass
@@ -93,11 +95,13 @@ def ControlDevice(device, status): # kiêu kiểu thế này
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            get_status(29)
             print("RELAY3 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
             Windowns.UpdatePicture(device, status)
         #                get_status_all()
+            get_status(29)
             print("RELAY3 OFF") 
         else:
             pass
@@ -106,11 +110,13 @@ def ControlDevice(device, status): # kiêu kiểu thế này
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            get_status(29)
             print("RELAY4 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
             Windowns.UpdatePicture(device, status)
         #                get_status_all()
+            get_status(29)
             print("RELAY4 OFF") 
         else:
             pass
@@ -119,11 +125,13 @@ def ControlDevice(device, status): # kiêu kiểu thế này
         #            GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
         #                get_status_all()    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
+            get_status(30)
             print("RELAY5 ON") 
         elif(status == 0):
         #            GW_Blue.control_RL(1, 0)
             Windowns.UpdatePicture(device, status)
         #                get_status_all()
+            get_status(30)
             print("RELAY5 OFF") 
         else:
             pass 
@@ -188,53 +196,33 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
 def get_status(pos): # lấy trạng thái hiện tại của thiet bi
     global client, GW_Blue
 
-    # test for node 27
-    # CONSTANT.DATA_G00["NODE" + str(pos)]["value"]     = GW_Blue.get_status_RL(pos, 1)
-    # CONSTANT.DATA_G00["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(pos, CONSTANT.SENSOR["relay"])
-    # CONSTANT.DATA_G00["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(pos, CONSTANT.SENSOR["relay"])
+    # CONSTANT.DATA_G02["NODE" + str(pos)]["value"]     = GW_Blue.get_status_RL(5, 1)
+    # CONSTANT.DATA_G02["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(5, CONSTANT.SENSOR["relay"])
+    # CONSTANT.DATA_G02["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(5, CONSTANT.SENSOR["relay"])
 
     # giai quyet chi guu 1 relay len VD : neu pos = 1, guu relay 1 len - chua code dc
-    if(pos == 27):
-        # payload_data = {
-        #     'sub_id': "G05",
-        #     "relay_1": {
-        #         "RF_signal": CONSTANT.DATA_G00["NODE" + str(pos)]["RF_signal"],
-        #         'value': str(CONSTANT.DATA_G00["NODE" + str(pos)]["value"]),
-        #         'battery': 100
-        #     }
 
-        payload_data = {
-            'sub_id': "G05",
-            "relay_1": {
-                "RF_signal": "XX",
-                'value': "XY",
-                'battery': 100
-            }
+    payload_data = {
+        'sub_id': "G02",
+        "relay_1": {
+            "RF_signal": CONSTANT.DATA_G02["NODE" + str(pos)]["RF_signal"],
+            'value': str(CONSTANT.DATA_G02["NODE" + str(pos)]["value"]),
+            'battery': 100
         }
-    elif(pos == 28):
-        pass
-    elif(pos == 29):
-        pass
-    elif(pos == 30):
-        pass
-    elif(pos == 31):
-        pass
-    else:
-        pass
+    }
 
     if(check_internet() == True): 
-        DB.insert_data_row("nongtrai_G00", pos, CONSTANT.DATA_G00["NODE" + str(pos)]["id"],"RELAY",
-        CONSTANT.DATA_G00["NODE" + str(pos)]["value"], CONSTANT.DATA_G00["NODE" + str(pos)]["RF_signal"], 100, 
+        DB.insert_data_row("controller", pos, CONSTANT.DATA_G02["NODE" + str(pos)]["name"],CONSTANT.DATA_G02["NODE" + str(pos)]["id"],
+        CONSTANT.DATA_G02["NODE" + str(pos)]["value"], CONSTANT.DATA_G02["NODE" + str(pos)]["RF_signal"], 100, 
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "ok")
         print("connect to internet")
 
-        client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_data))
+        # client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_data))
     else:
-        DB.insert_data_row("backup_nongtrai_G00", pos, CONSTANT.DATA_G00["NODE" + str(pos)]["id"],"RELAY",
-        CONSTANT.DATA_G00["NODE" + str(pos)]["value"], CONSTANT.DATA_G00["NODE" + str(pos)]["RF_signal"], 100, 
+        DB.insert_data_row("backup_controller", pos, CONSTANT.DATA_G02["NODE" + str(pos)]["name"],CONSTANT.DATA_G02["NODE" + str(pos)]["id"],
+        CONSTANT.DATA_G02["NODE" + str(pos)]["value"], CONSTANT.DATA_G02["NODE" + str(pos)]["RF_signal"], 100, 
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "error")
         print("disconnect to internet")
-
 
 
 '''
@@ -501,177 +489,139 @@ def Update_GatewayBlue():
     # CONSTANT.DATA["NODE21"]["ID"]   = GW_Blue.get_node_id(4, CONSTANT.SENSOR["LIGHT"])   
     # # cảm biến nhiệt độ
 
-    # Trang trại G01
-
-    #update data-----------------------------------
-    # for i in range(1, 11):
-    #     Windowns.Update_SM(CONSTANT.DATA_G00, i, "G00")
-    # for i in range(11, 21):
-    #     Windowns.Update_SM(CONSTANT.DATA_G01, i, "G01")
-
-    # Windowns.Update_H(CONSTANT.DATA_G00, 1)
-    # Windowns.Update_H(CONSTANT.DATA_G01, 2)
-    # Windowns.Update_L(CONSTANT.DATA_G00, 1)
-    # Windowns.Update_L(CONSTANT.DATA_G01, 2)
-    # Update_RF_Relay(CONSTANT.DATA_G02)
-    #----end----------------------------------------
-
-    # 1 là luồng này ghi backup luôn - 2 là luồng kia ghi
-    # if (check_internet() == True): # nếu có mạng gửu Data lên server
-    #     client.publish(MQTT_TOPIC_SEND, json.dumps(payload_1)) 
-    #     DB.insert_data("nongtrai", "OK")  # ghi vào cơ sở dữ liệu nông trại - syn OK
-    # else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-    #     DB.insert_data("matmang", "ERROR") 
-
     #random
-    for i in range(1, 21):
-        name = "soil_moistrure" + str(i)
-        node = i
-        if(i <= 10):
-            CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-            CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G00["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    for i in range(1, 11):
+        CONSTANT.DATA_G00["NODE" + str(i)]["value"]       = random.randint(1,100)
+        CONSTANT.DATA_G00["NODE" + str(i)]["battery"]     = random.randint(1,100)
+        CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
+        CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+        CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        CONSTANT.DATA_G00["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G00",node,CONSTANT.DATA_G00["NODE" + str(i)]["id"],name,
-                CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
-                CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
-                # ghi vào cơ sở dữ liệu nông trại - syn OK
-            else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G00", node, CONSTANT.DATA_G00["NODE" + str(i)]["id"],name,
-                CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
-                CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"error")  
-        else:
-            CONSTANT.DATA_G01["NODE" + str(i)]["value"]     = random.randint(1, 100)
-            CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-            CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G01["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if (check_internet() == True): # nếu có mạng gửu Data lên server
+        DB.insert_data_nongtraiG00("nongtrai_G00", "ok")
+    else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
+        DB.insert_data_backup_nongtraiG00("backup_nongtrai_G00", "error")
 
-            if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G01",node,CONSTANT.DATA_G01["NODE" + str(i)]["id"],name,
-                CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
-                CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"ok")  
-            else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G01", node, CONSTANT.DATA_G01["NODE" + str(i)]["id"],name,
-                CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
-                CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
+    for i in range(11, 21):
+        CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1, 100)
+        CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
+        CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
+        CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+        CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        CONSTANT.DATA_G01["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if (check_internet() == True): # nếu có mạng gửu Data lên server
+        DB.insert_data_nongtraiG01("nongtrai_G01", "ok")  
+    else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
+        DB.insert_data_backup_nongtraiG01("backup_nongtrai_G01", "error")  
+
     # humidity
     for i in range(21, 23):
-        node = i
         if(i==21):
-            CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-            CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G00["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G00["NODE" + str(i)]["id"]           = random.randint(10000,99999)
+            CONSTANT.DATA_G00["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G00["time"]                          = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G00",node,CONSTANT.DATA_G00["NODE" + str(i)]["id"],"humidity1",
+                DB.insert_data_row("nongtrai_G00", CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G00", node, CONSTANT.DATA_G00["NODE" + str(i)]["id"],"humidity1",
+                DB.insert_data_backup_row("backup_nongtrai_G00", CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"error")  
         elif(i==22):
-            CONSTANT.DATA_G01["NODE" + str(i)]["value"]     = random.randint(1,100)
+            CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-            CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G01["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G01["NODE" + str(i)]["id"]           = random.randint(10000,99999)
+            CONSTANT.DATA_G01["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G01["time"]                          = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G01",node,CONSTANT.DATA_G01["NODE" + str(i)]["id"],"humidity2",
+                DB.insert_data_row("nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G01", node, CONSTANT.DATA_G01["NODE" + str(i)]["id"],"humidity2",
+                DB.insert_data_backup_row("backup_nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
         else:
             pass
+
     #light
     for i in range(23, 25):
-        node = i
         if(i==23):
-            CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+            CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1, 100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1, 100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000, 99999)
             CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G00["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+            CONSTANT.DATA_G00["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G00",node,CONSTANT.DATA_G00["NODE" + str(i)]["id"],"light1",
+                DB.insert_data_row("nongtrai_G00", CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G00", node, CONSTANT.DATA_G00["NODE" + str(i)]["id"],"light1",
+                DB.insert_data_backup_row("backup_nongtrai_G00", CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"error")  
         elif(i==24):
-            CONSTANT.DATA_G01["NODE" + str(i)]["value"]     = random.randint(1,100)
+            CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]   = "perfect"
-            CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000, 99999)
             CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             CONSTANT.DATA_G01["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G01",node,CONSTANT.DATA_G01["NODE" + str(i)]["id"],"light2",
+                DB.insert_data_row("nongtrai_G01",CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G01", node, CONSTANT.DATA_G01["NODE" + str(i)]["id"],"light2",
+                DB.insert_data_backup_row("backup_nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
         else:
             pass
+
     #temperature
     for i in range(25, 27):
-        node = i
         if(i==25):
-            CONSTANT.DATA_G00["NODE" + str(i)]["value"]     = random.randint(1,100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
+            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = "perfect"
             CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
             CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G00["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+            CONSTANT.DATA_G00["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G00",node,CONSTANT.DATA_G00["NODE" + str(i)]["id"],"temperature1",
+                DB.insert_data_row("nongtrai_G00",CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G00",node,CONSTANT.DATA_G00["NODE" + str(i)]["id"],"temperature1",
+                DB.insert_data_backup_row("backup_nongtrai_G00",CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
         elif(i==26):
-            CONSTANT.DATA_G01["NODE" + str(i)]["value"]     = random.randint(1,100)
+            CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
-            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]   = "perfect"
+            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
             CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
             CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G01["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G01["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             if (check_internet() == True): # nếu có mạng gửu Data lên server
-                DB.insert_data_row("nongtrai_G01",node,CONSTANT.DATA_G01["NODE" + str(i)]["id"],"temperature2",
+                DB.insert_data_row("nongtrai_G01",CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"ok")  
             else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-                DB.insert_data_row("backup_nongtrai_G01", node, CONSTANT.DATA_G01["NODE" + str(i)]["id"],"temperature2",
+                DB.insert_data_backup_row("backup_nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
         else:
             pass
-
 
 
     # update GUI
@@ -690,17 +640,17 @@ def Update_GatewayBlue():
     Windowns.Update_T(CONSTANT.DATA_G00, 1, "G00")
     Windowns.Update_T(CONSTANT.DATA_G01, 2, "G01")
 
-    Windowns.Update_RF_Relay(CONSTANT.DATA_G00)
+    # Windowns.Update_RF_Relay(CONSTANT.DATA_G00)
 
     # send message to server
 
-    if(check_internet() == True): 
-        client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
-        client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
-    else:
-        # Windowns.debugg("Lỗi kết nối", "Không có internet")
-        print("khong co mang")
-        pass
+    # if(check_internet() == True): 
+    #     client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00)) 
+    #     client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01)) 
+    # else:
+    #     # Windowns.debugg("Lỗi kết nối", "Không có internet")
+    #     print("khong co mang")
+    #     pass
     # print(CONSTANT.DATA_G00)
     # print(CONSTANT.DATA_G01)
 
@@ -818,8 +768,10 @@ def Thread_lamp2():
     else:
         pass
 
+
 def Synchronous():
     global client
+    
     Windowns.app.label_12.show()
     Windowns.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
     Windowns.app.label_2.show()
@@ -828,49 +780,77 @@ def Synchronous():
 
     max_G00 = DB.find_pos("backup_nongtrai_G00")
     max_G01 = DB.find_pos("backup_nongtrai_G01")
+    max_G02 = DB.find_pos("backup_controller")
+    print(CONSTANT.posBackup_G00)
+    print(max_G00)
     Init_mqtt()
+
+    # NongtraiG00
     for i in range(CONSTANT.posBackup_G00, max_G00+1):
         DB.update_data("backup_nongtrai_G00", i, "ok")
+    
+        # data = DB.get_data_n_row("backup_nongtrai_G00", 13)
         data = DB.get_data_row("backup_nongtrai_G00", i)
-        payload = {
-            'sub_id' : 'G00',
-            'node'   : data[0][1],
-            'name'   : data[0][2],
-            'id'     : data[0][3],
-            'value'  : data[0][4],
-            'RF_signal'  : data[0][5],
-            'battery'    : data[0][6],
-            'time'       : data[0][7],
-            'syn'        : data[0][8]
-        }
+        if(data!=[]):
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["id"]        =  data[0][3]
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["value"]     =  int(data[0][4])
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["RF_signal"] =  data[0][5]   
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["battery"]   =  data[0][6]    
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["time"]      =  data[0][7]
+            CONSTANT.DATA_G00["NODE" + str(data[0][1])]["syn"]       =  data[0][8]
+            if(i%13==0):
+                CONSTANT.DATA_G00["sub_id"] = "G00"
+                CONSTANT.DATA_G00["time"] = data[0][7]
+                print(json.dumps(CONSTANT.DATA_G00))
 
-        # bug client ko dc dinh nghia
-        if(check_internet() == True): 
-            client.publish(MQTT_TOPIC_BACKUP, json.dumps(payload))
-        else:
-            Windowns.debugg("Lỗi kết nối", "Không có internet")
-        # print(json.dumps(payload))
+    # if(check_internet() == True): 
+    #     client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00))
+    # else:
+    #     Windowns.debugg("Lỗi kết nối", "Không có internet")
 
+    # NongtraiG01
     for i in range(CONSTANT.posBackup_G01, max_G01+1):
         DB.update_data("backup_nongtrai_G01", i, "ok")
+
         data = DB.get_data_row("backup_nongtrai_G01", i)
-        payload = {
-            'sub_id' : 'G01',
-            'node'   : data[0][1],
-            'name'   : data[0][2],
-            'id'     : data[0][3],
-            'value'  : data[0][4],
-            'RF_signal'  : data[0][5],
-            'battery'    : data[0][6],
-            'time'       : data[0][7],
-            'syn'        : data[0][8]
-        }
+        if(data!=[]):
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["id"]        =  data[0][3]
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["value"]     =  int(data[0][4])
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["RF_signal"] =  data[0][5]   
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["battery"]   =  data[0][6]    
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["time"]      =  data[0][7]
+            CONSTANT.DATA_G01["NODE" + str(data[0][1])]["syn"]       =  data[0][8]
+            if(i%13 == 0):
+                CONSTANT.DATA_G01["sub_id"] = "G01"
+                CONSTANT.DATA_G01["time"] = data[0][7]
+                print(json.dumps(CONSTANT.DATA_G01))        
+
+    # if(check_internet() == True): 
+    #     client.publish(MQTT_TOPIC_SEND, json.dumps(payload))
+    # else:
+    #     Windowns.debugg("Lỗi kết nối", "Không có internet")
+
+    # Controller - kiến nghị là gửu lên từng row một
+    # for i in range(CONSTANT.posBackup_G02, max_G02 + 1):
+    #     DB.update_data("backup_controller", i, "ok")
+    #     data = DB.get_data_row("backup_controller", i)
+
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["id"]        =  data[0][3]
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["value"]     =  int(data[0][4])
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["RF_signal"] =  data[0][5]   
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["battery"]   =  data[0][6]    
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["time"]      =  data[0][7]
+    #     CONSTANT.DATA_G02["NODE" + str(data[0][1])]["syn"]       =  data[0][8]
+
+    # CONSTANT.DATA_G02["sub_id"] = "G02"
+    # CONSTANT.DATA_G02["time"] = data[0][7]
+    # print(json.dumps(CONSTANT.DATA_G02))    
         
-        if(check_internet() == True): 
-            client.publish(MQTT_TOPIC_BACKUP, json.dumps(payload))
-        else:
-            Windowns.debugg("Lỗi kết nối", "Không có internet")
-        # print(json.dumps(payload))
+    # if(check_internet() == True): 
+    #     client.publish(MQTT_TOPIC_CONTROL, json.dumps(payload))
+    # else:
+    #     Windowns.debugg("Lỗi kết nối", "Không có internet")
+
     
     Windowns.app.label_2.hide()
     Windowns.app.label_12.hide()                    
@@ -887,10 +867,13 @@ def Backup():
     Windowns.app.label_2.setText("Backup dữ liệu")   
     Windowns.app.label_2.setStyleSheet("QLabel {color:rgb(255, 0, 0)}")   
 
-    DB.creaat_table("backup_nongtrai_G00")
-    DB.creaat_table("backup_nongtrai_G01")
+    DB.creat_table("backup_nongtrai_G00")
+    DB.creat_table("backup_nongtrai_G01")
+    DB.creat_table("backup_controller")
+
     CONSTANT.posBackup_G00   = DB.find_pos("backup_nongtrai_G00")
     CONSTANT.posBackup_G01   = DB.find_pos("backup_nongtrai_G01")
+    CONSTANT.posBackup_G02   = DB.find_pos("backup_controller")
 
     CONSTANT.flag_backup = 1
     CONSTANT.flag_backup_N = 0  
@@ -900,8 +883,8 @@ def Init_mqtt():
     if (check_internet() == True): # kiểm tra internet nếu có gửu cho a vững
         client = mqtt.Client()
         client.username_pw_set(MQTT_USER, MQTT_PWD)
-        # client.connect(MQTT_HOST, 1883)
-        client.connect(MQTT_HOST, 14106)
+        client.connect(MQTT_HOST, 1883)
+        # client.connect(MQTT_HOST, 14106)
         client.on_connect = on_connect
         client.on_message = on_message
         client.loop_start()
@@ -987,8 +970,9 @@ def Init_Button():
 
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
-    # requirePort()
-    # Init_UI()
+    global GW_Blue
+    #requirePort()
+    #Init_UI()
     # Init_Lora()
     Init_Button()
     # Init_Thread()
@@ -996,7 +980,7 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
 
     blue = QTimer()
     blue.timeout.connect(Update_data)
-    blue.start(10000)   
+    blue.start(1000)   
 # end-mqtt-------------------------------------
 
     Windowns.app.show()

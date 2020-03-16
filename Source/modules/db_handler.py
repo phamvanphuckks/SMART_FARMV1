@@ -14,7 +14,55 @@ class DataBase():
         self.con  = sql.connect(self.path, check_same_thread=False)
         self.cur  = self.con.cursor()
 
-    def creaat_table(self, place):
+        self.pathbk = "databases\\DBBK_OF_SFARM.db"
+        self.conbk  = sql.connect(self.pathbk, check_same_thread=False)
+        self.curbk  = self.conbk.cursor()
+
+    def creat_table(self, place):
+        lock.acquire(True)
+        table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        with self.con:
+            cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
+                stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
+                node        INTEGER     NULL,
+                name        TEXT        NULL,
+                id          TEXT        NULL,
+                value       TEXT        NULL,
+                RF_signal   TEXT        NULL,
+                battery     TEXT        NULL,
+                time        TEXT        NULL, 
+                syn         TEXT        NULL)
+                '''
+            self.curbk.execute(cmd)
+        lock.release()
+
+    def insert_data_nongtraiG00(self, place, syn):
+        lock.acquire(True)
+        table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        with self.con:
+            cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
+                stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
+                node        INTEGER     NULL, 
+                name        TEXT        NULL,
+                id          TEXT        NULL,
+                value       TEXT        NULL,
+                RF_signal   TEXT        NULL,
+                battery     TEXT        NULL,
+                time        TEXT        NULL, 
+                syn         TEXT        NULL)
+                '''
+            self.cur.execute(cmd)
+
+            cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+            for i in range(1, 11):
+                self.cur.execute(cmd, ( str(CONSTANT.DATA_G00["NODE"+str(i)]["node"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["name"]), 
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["value"]), 
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["battery"]),
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["time"]),  syn)
+            )
+        lock.release()
+
+    def insert_data_nongtraiG01(self, place, syn):
         lock.acquire(True)
         table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
         with self.con:
@@ -30,14 +78,20 @@ class DataBase():
                 syn         TEXT        NULL)
                 '''
             self.cur.execute(cmd)
-            lock.release()
-            self.con.commit()
-        # self.con.close()
 
-    def insert_data(self, place, syn):
+            cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+            for i in range(11, 21):
+                self.cur.execute(cmd, (str(CONSTANT.DATA_G01["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G01["NODE"+str(i)]["name"]), 
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["value"]), 
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["battery"]),
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["time"]),  syn)
+            )
+        lock.release()
+
+    def insert_data_backup_nongtraiG00(self, place, syn):
         lock.acquire(True)
         table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
-        with self.con:
+        with self.conbk:
             cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
                 stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
                 node        INTEGER     NULL,
@@ -49,19 +103,70 @@ class DataBase():
                 time        TEXT        NULL, 
                 syn         TEXT        NULL)
                 '''
-            self.cur.execute(cmd)
+            self.curbk.execute(cmd)
 
-            cmd = "INSERT INTO " + table_name + " (node,name,id,data,signal,pin,time,syn) VALUES(?,?,?,?,?,?,?,?)"
-            # for i in range(1, 32):
-            #     self.cur.execute(cmd, ( str(CONSTANT.DATA["NODE"+str(i)]["node"]), str(CONSTANT.DATA["NODE"+str(i)]["name"]), 
-            #     str(CONSTANT.DATA["NODE"+str(i)]["id"]), str(CONSTANT.DATA["NODE"+str(i)]["value"]), str(CONSTANT.DATA["NODE"+str(i)]["battery"]),str(CONSTANT.DATA["NODE"+str(i)]["RF_signal"]), 
-            #     str(CONSTANT.DATA["NODE"+str(i)]["time"]),  syn)
-            #     )
+            cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+            for i in range(1, 11):
+                self.curbk.execute(cmd, (str(CONSTANT.DATA_G00["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G00["NODE"+str(i)]["name"]), 
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["value"]), 
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["battery"]),
+                str(CONSTANT.DATA_G00["NODE"+str(i)]["time"]),  syn)
+            )
+        lock.release()
+
+    def insert_data_backup_nongtraiG01(self, place, syn):
+        lock.acquire(True)
+        table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        with self.conbk:
+            cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
+                stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
+                node        INTEGER     NULL,
+                name        TEXT        NULL,
+                id          TEXT        NULL,
+                value       TEXT        NULL,
+                RF_signal   TEXT        NULL,
+                battery     TEXT        NULL,
+                time        TEXT        NULL, 
+                syn         TEXT        NULL)
+                '''
+            self.curbk.execute(cmd)
+
+            cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+            for i in range(11, 21):
+                self.curbk.execute(cmd, (str(CONSTANT.DATA_G01["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G01["NODE"+str(i)]["name"]), 
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["value"]), 
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["battery"]),
+                str(CONSTANT.DATA_G01["NODE"+str(i)]["time"]),  syn)
+            )
+        lock.release()
+
+    def insert_data_Relay(self, place, syn):
+            lock.acquire(True)
+            table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
+            with self.con:
+                cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
+                    stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
+                    node        INTEGER     NULL,
+                    name        TEXT        NULL,
+                    id          TEXT        NULL,
+                    value       TEXT        NULL,
+                    RF_signal   TEXT        NULL,
+                    battery     TEXT        NULL,
+                    time        TEXT        NULL, 
+                    syn         TEXT        NULL)
+                    '''
+                self.cur.execute(cmd)
+
+                cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+                for i in range(27, 32):
+                    self.cur.execute(cmd, (str(CONSTANT.DATA_G01["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G01["NODE"+str(i)]["name"]), 
+                    str(CONSTANT.DATA_G01["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["value"]), 
+                    str(CONSTANT.DATA_G01["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["battery"]),
+                    str(CONSTANT.DATA_G01["NODE"+str(i)]["time"]),  syn)
+                )
             lock.release()
-            self.con.commit()
-        # self.con.close()
 
-    def insert_data_row(self, place, node, id, name, value,  RF_signal, battery, time, syn):
+    def insert_data_row(self, place, node, name, id, value,  RF_signal, battery, time, syn):
         lock.acquire(True)
         table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
         with self.con:
@@ -80,20 +185,46 @@ class DataBase():
 
             cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
  
-            self.cur.execute(cmd, ( str(node), str(name),str(id), str(value), str(RF_signal), str(battery), str(time),  str(syn)))
-            lock.release()
-            self.con.commit()
-        # self.con.close()
+            self.cur.execute(cmd, (str(node), str(name),str(id), str(value), str(RF_signal), str(battery), str(time),  str(syn)))
+        lock.release()
+
+    def insert_data_backup_row(self, place, node, name, id, value,  RF_signal, battery, time, syn):
+        lock.acquire(True)
+        table_name = "data_of_"+ str(place) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        with self.conbk:
+            cmd = "CREATE TABLE IF NOT EXISTS " + table_name + '''(
+                stt         INTEGER     PRIMARY KEY AUTOINCREMENT,
+                node        INTEGER     NULL,
+                name        TEXT        NULL,
+                id          TEXT        NULL,
+                value       TEXT        NULL,
+                RF_signal   TEXT        NULL,
+                battery     TEXT        NULL,
+                time        TEXT        NULL, 
+                syn         TEXT        NULL)
+                '''
+            self.curbk.execute(cmd)
+
+            cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
+ 
+            self.curbk.execute(cmd, (str(node), str(name),str(id), str(value), str(RF_signal), str(battery), str(time),  str(syn)))
+        lock.release()
 
     def update_data(self, table_name, pos, status):
+        lock.acquire(True)
+        table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        with self.conbk:
+            cmd = "UPDATE %s" %table + " SET syn='%s'"%status + " WHERE stt=" + str(pos)
+            self.curbk.execute(cmd)
+        lock.release()
+
+    def update_data_row(self, table_name, pos, status):
         lock.acquire(True)
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         with self.con:
             cmd = "UPDATE %s" %table + " SET syn='%s'"%status + " WHERE stt=" + str(pos)
             self.cur.execute(cmd)
             lock.release()
-            self.con.commit()
-        # self.con.close()
 
     def remove_data(self, table_name, pos):
         lock.acquire(True)
@@ -101,19 +232,16 @@ class DataBase():
             cmd = "DELETE from %s" %table_name+" where stt="+str(pos)
             self.cur.execute(cmd)
             lock.release()
-            self.con.commit()
-        self.con.close()
 
     def find_pos(self, table_name):
         lock.acquire(True)
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
-        with self.con:
+
+        with self.conbk:
             cmd = "SELECT stt FROM %s" %table + " WHERE stt=(SELECT MAX(stt)  FROM %s" %table + ")"
-            self.cur.execute(cmd)
-            lock.release()
-            self.con.commit()
-            data = self.cur.fetchall()
-        # self.con.close()
+            self.curbk.execute(cmd)
+            data = self.curbk.fetchall()
+        lock.release()
         if (data == []):   return 1
         else:   return   data[0][0]
 
@@ -123,26 +251,24 @@ class DataBase():
 
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         lock.acquire(True)
-        with self.con:
+        with self.conbk:
             cmd = "SELECT * FROM %s" %table + " WHERE stt="+ str(pos)
-            self.cur.execute(cmd)
-            lock.release()
-            self.con.commit()
-            data = self.cur.fetchall()
+            self.curbk.execute(cmd)
+            data = self.curbk.fetchall()
+        lock.release()
         return data
 
     # Query với n cột trong bảng của ngày hôm đó
-    def Query(self, table_name, n): # sợ đọc load vào 1 mảng bị tràn mình sẽ chia làm hai sử dụng kiểu ringbuffer - chưa viết đc
+    def get_data_n_row(self, table_name, n): # sợ đọc load vào 1 mảng bị tràn mình sẽ chia làm hai sử dụng kiểu ringbuffer - chưa viết đc
         lock.acquire(True)
         datas = []
         data  = []
+        table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         with self.con:
-            cmd = "SELECT * FROM %s" %table_name
+            cmd = "SELECT * FROM %s" %table
             self.cur.execute(cmd)
-            lock.release()
             data = self.cur.fetchall()
-        # self.con.close()
-        
+        lock.release()
         for i in range(len(data)-n,len(data)):
             datas.append(data[i])
         return datas
@@ -153,7 +279,7 @@ class DataBase():
         with self.con:
             tables = list(self.cur.execute(
                     "select name from sqlite_master where type is 'table' "))
-            lock.release()
+        lock.release()
         return tables
 
     def Delete_all_tb(self):
@@ -168,7 +294,7 @@ class DataBase():
                     pass
             self.cur.executescript(cmd)
             self.con.commit()
-            lock.release()
+        lock.release()
         
 
 
