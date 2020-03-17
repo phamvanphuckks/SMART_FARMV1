@@ -409,8 +409,6 @@ class qt5Class():
         else:
             pass
 
-
-
     def Update_RF_Relay(self, data_payload):
         if(data_payload["NODE27"]["RF_signal"] == "Perfect"):
             self.app.tab2_th1.setStyleSheet(
@@ -437,7 +435,7 @@ class qt5Class():
         try:
             # connect to the host -- tells us if the host is actually
             # reachable
-            socket.create_connection(("www.google.com", 80), 1)
+            socket.create_connection(("www.google.com", 80), 2)
             return True
         except OSError:
             pass

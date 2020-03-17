@@ -56,16 +56,12 @@ flag_lamp2_N = 1
 # test = 5
 # Pump1_second = 5
 #--------------------------------------------------------------------------------------------------
-global posBackup_G00, posBackup_G01, posBackup_G02 # vi tri STT trong data base khi mat mang
 global flag_backup # co backup
 global flag_backup_N
 
-posBackup_G00 = 1
-posBackup_G01 = 1
-posBackup_G02 = 1
-
 flag_backup   = 0
 flag_backup_N = 1
+
 
 global DATA_G00, DATA_G01, DATA_G02
 
@@ -110,13 +106,28 @@ DATA_G01 = {
     "NODE33": {"node": 33,"name": "ph2",               "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"}
 }
 
-DATA_G02 = {
+DATA_RELAY_G00 = {
+    "sub_id": "G00",
+    "time"  :  "",
+    "NODE27": {"node": 27,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
+    "NODE29": {"node": 29,"name": "relay3", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"}
+}
+
+DATA_RELAY_G01 = {
+    "sub_id": "G01",
+    "time"  :  "",
+    "NODE28": {"node": 28,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
+    "NODE30": {"node": 30,"name": "relay3", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"}
+}
+
+
+DATA_RELAY = {
     "sub_id": "G02",
     "time"  :  "",
     "NODE27": {"node": 27,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
     "NODE28": {"node": 28,"name": "relay2", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
-    "NODE29": {"node": 29,"name": "relay3", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
-    "NODE30": {"node": 30,"name": "relay4", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
+    "NODE29": {"node": 29,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
+    "NODE30": {"node": 30,"name": "relay2", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
     "NODE31": {"node": 31,"name": "relay5", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"}
 }
 

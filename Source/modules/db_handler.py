@@ -7,7 +7,6 @@ from datetime  import datetime
 
 lock = Lock()
 
-
 class DataBase():
     def __init__(self):
         self.path = "databases\\DB_OF_SFARM.db"
@@ -210,7 +209,7 @@ class DataBase():
             self.curbk.execute(cmd, (str(node), str(name),str(id), str(value), str(RF_signal), str(battery), str(time),  str(syn)))
         lock.release()
 
-    def update_data(self, table_name, pos, status):
+    def update_data_backup_row(self, table_name, pos, status):
         lock.acquire(True)
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         with self.conbk:
@@ -226,6 +225,19 @@ class DataBase():
             self.cur.execute(cmd)
             lock.release()
 
+    def check_syn(self, table_name, stt):
+        table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
+        lock.acquire(True)
+        with self.conbk:
+            cmd = "SELECT * FROM %s" %table + " WHERE stt="+ str(stt)
+            self.curbk.execute(cmd)
+            data = self.curbk.fetchall()
+        lock.release()
+        if(data[0][8] == "ok"):
+            return True
+        else:
+            return False
+
     def remove_data(self, table_name, pos):
         lock.acquire(True)
         with self.con:
@@ -233,7 +245,7 @@ class DataBase():
             self.cur.execute(cmd)
             lock.release()
 
-    def find_pos(self, table_name):
+    def find_pos_backup(self, table_name):
         lock.acquire(True)
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
 
@@ -245,9 +257,7 @@ class DataBase():
         if (data == []):   return 1
         else:   return   data[0][0]
 
-    # Đặt vấn đề với querry và getdata : với mảng có dữ liệu cực kì lớn thì sao thì lệnh fetchall sẽ rất lớn theo vượt quá buffer
-    # vì vậy phải đọc từng ít một
-    def get_data_row(self, table_name, pos):
+    def get_data_backup_row(self, table_name, pos):
 
         table = "data_of_"+ str(table_name) + "_"+ datetime.now().strftime("%d_%m_%Y")
         lock.acquire(True)

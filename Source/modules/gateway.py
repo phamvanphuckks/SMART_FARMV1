@@ -21,8 +21,9 @@ class Gateway():
         self.initialize()
 
     def initialize(self): # khi mình khởi động tắt tất cả thiết bị và cập nhập trạng thái off trên app
-        # for i in range(1, 6):
-        #     self.control_RL(i, 0)
+        # for i in range(27, 31):
+            # self.control_RL(i, 1, 0)
+        self.control_RL(5, 1, 0)
         pass
 
     # convert data to int 16
