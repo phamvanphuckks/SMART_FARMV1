@@ -53,12 +53,12 @@ MQTT_TOPIC_BACKUP  = 'backup_data'
 def ControlDevice(device, status): # kiêu kiểu thế này
     if (device == 1):  # pump1
         if(status == 1):
-            GW_Blue.control_RL(5, 1, 1) # GateWay(Xanh) điểu khiển Relay 
+            # GW_Blue.control_RL(5, 1, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
             get_status(27)    # sau khi bấm gửu trạng thái của tất cả relay lên web, hàm này chưa hoàn thiện
             print("RELAY1 ON") 
         elif(status == 0):
-            GW_Blue.control_RL(5, 1, 0)
+            # GW_Blue.control_RL(5, 1, 0)
             Windowns.UpdatePicture(device, status)
             get_status(27)
             print("RELAY1 OFF") 
@@ -138,49 +138,50 @@ def ControlDevice(device, status): # kiêu kiểu thế này
 def get_status_all(): # lấy trạng thái hiện tại của thiet bi
     global client, GW_Blue
 
-    # Relay trang trai G00
-    payload_dataG00 = {
-        'sub_id'     : "G00",
-        'date_sync'  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        'time'       : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "relay_1": {
-            "RF_signal": GW_Blue.get_RFsignal(5),
-            'value'    : str(GW_Blue.get_status_RL(5,1)),
-            'battery'  : 100
-        },
-        # "relay_2": {
-        #     "RF_signal": GW_Blue.get_RFsignal(28),
-        #     'value'    : str(GW_Blue.get_status_RL(28,1)),
-        #     'battery'  : 100
-        # }
-    }
-    # Relay trang trai G01
-    payload_dataG01 = {
-        'sub_id'     : "G01",
-        'date_sync'  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        'time'       : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "relay_1": {
-            "RF_signal": GW_Blue.get_RFsignal(5),
-            'value'    : str(GW_Blue.get_status_RL(5,1)),
-            'battery'  : 100
-        },
-        # "relay_2": {
-        #     "RF_signal": GW_Blue.get_RFsignal(28),
-        #     'value'    : str(GW_Blue.get_status_RL(28,1)),
-        #     'battery'  : 100
-        # }
-    }
+    # # Relay trang trai G00
+    # payload_dataG00 = {
+    #     'sub_id'     : "G00",
+    #     'date_sync'  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #     'time'       : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #     "relay_1": {
+    #         "RF_signal": GW_Blue.get_RFsignal(5),
+    #         'value'    : str(GW_Blue.get_status_RL(5,1)),
+    #         'battery'  : 100
+    #     },
+    #     # "relay_2": {
+    #     #     "RF_signal": GW_Blue.get_RFsignal(28),
+    #     #     'value'    : str(GW_Blue.get_status_RL(28,1)),
+    #     #     'battery'  : 100
+    #     # }
+    # }
+    # # Relay trang trai G01
+    # payload_dataG01 = {
+    #     'sub_id'     : "G01",
+    #     'date_sync'  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #     'time'       : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #     "relay_1": {
+    #         "RF_signal": GW_Blue.get_RFsignal(5),
+    #         'value'    : str(GW_Blue.get_status_RL(5,1)),
+    #         'battery'  : 100
+    #     },
+    #     # "relay_2": {
+    #     #     "RF_signal": GW_Blue.get_RFsignal(28),
+    #     #     'value'    : str(GW_Blue.get_status_RL(28,1)),
+    #     #     'battery'  : 100
+    #     # }
+    # }
 
-    if (check_internet() == True): 
-        client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG00))
-        client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG01))
+    # if (check_internet() == True): 
+    #     client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG00))
+    #     client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG01))
 
-        print( json.dumps(payload_dataG00))
-        print( json.dumps(payload_dataG01))
+    #     print( json.dumps(payload_dataG00))
+    #     print( json.dumps(payload_dataG01))
 
-    else:
-        print("topic MQTT_TOPIC_STATUS ko dc guu")
-        pass
+    # else:
+    #     print("topic MQTT_TOPIC_STATUS ko dc guu")
+    #     pass
+    pass
 
 
 
@@ -193,9 +194,9 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
 def get_status(pos): 
     global client, GW_Blue
     # neu ma la 27 phai chinh 5 thanh 27
-    CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]     = int(GW_Blue.get_status_RL(5, 1))
-    CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(5, CONSTANT.SENSOR["relay"])
-    CONSTANT.DATA_RELAY["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(5, CONSTANT.SENSOR["relay"])
+    # CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]     = int(GW_Blue.get_status_RL(5, 1))
+    # CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(5, CONSTANT.SENSOR["relay"])
+    # CONSTANT.DATA_RELAY["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(5, CONSTANT.SENSOR["relay"])
 
     # 1 nong trai se co 2 relay Relay_1 va relay_2
     if(pos == 27):
@@ -898,9 +899,9 @@ def Synchronous():
 
     # Controller - RELAY
     for i in range(1, max_Relay + 1):
-        if(DB.check_syn("backup_nongtrai_G01", i)==False): # phat hien ra la co data chua sync- vet tu day
+        if(DB.check_syn("backup_controller", i)==False): # phat hien ra la co data chua sync- vet tu day
             DB.update_data_backup_row("backup_controller", i, "ok")
-            data = DB.get_data_backup_row("backup_controller", i)
+            # data = DB.get_data_backup_row("backup_controller", i)
         else:
             pass
 
@@ -1087,11 +1088,11 @@ def Init_mqtt():
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
     global GW_Blue
-    requirePort()
-    Init_UI()
+    # requirePort()
+    # Init_UI()
     # Init_Lora()
     Init_Button()
-    # Init_Thread()
+    Init_Thread()
     Init_mqtt()
 
     blue = QTimer()
