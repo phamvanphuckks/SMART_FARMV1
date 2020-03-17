@@ -74,4 +74,6 @@ class Gateway1():
             else:
                 return False
         except:
-            pass
+            file = open("logs\\error_code.txt", "w")
+            file.write( "dong78-lora.py");
+            file.close()

@@ -180,7 +180,9 @@ class Gateway():
             self.instrument.write_register(registeraddress=(2000 + (pos-1)*8 +(chanel-1)), value=status,
                                                 number_of_decimals=0, functioncode=16, signed=False)
         except :
-            pass
+            file = open("logs\\error_code.txt", "w")
+            file.write("dong183--gateway.py");
+            file.close()
            
     # get status of relay - phản hồi trạng thái hiện tại của relay
     def get_status_RL(self, pos, chanel):
@@ -189,7 +191,9 @@ class Gateway():
                     registeraddress=(2000 + (pos-1)*8 +(chanel-1)), number_of_registers=1, functioncode=3)
             return data[0]	
         except :
-            pass
+            file = open("logs\\error_code.txt", "w")
+            file.write("dong195-gateway.py");
+            file.close()
 
 
 #---------------------------------------------------------------------------------------------------------

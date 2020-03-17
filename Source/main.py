@@ -7,9 +7,10 @@ import sys, time, json, socket    # library in python
 
 import serial
 import serial.tools.list_ports
-import threading, random
+import random
 import paho.mqtt.client as mqtt # mqtt
 
+# gây bug khi auto-py-to-exe
 sys.path.append('modules')# pathname to forder consist modules
 # library programer development
 import constant     as  CONSTANT
@@ -373,6 +374,7 @@ def Init_Lora(): # khoi tao GateWay do
     except:
         QMessageBox.critical(Windowns.app, "LỖI KẾT NỐI COM",
                                   "KHÔNG THỂ KẾT NỐI")
+        pass
 
 def check_internet():   # kiểm tra internet
     try:
@@ -380,9 +382,8 @@ def check_internet():   # kiểm tra internet
         # reachable
         socket.create_connection(("www.google.com", 80), 2)
         return True
-    except OSError:
-        pass
-    return False
+    except:
+        return False
 
 def read_data():
     global check, GW_Red, client, GW_Blue, app
@@ -479,7 +480,8 @@ def read_data():
         else:
             print("Khong co mang")
     except:
-        pass  
+        pass
+ 
      
 def Update_GatewayRed():
     global GW_Red, client, Windowns
@@ -828,11 +830,9 @@ def Thread_lamp2():
     else:
         pass
 
-#---backup data-------------------------------------------------------------------------------------------------
+#---backup data --------------------------------------------------------------
 def Synchronous():
     global client
-
-    #Bug ở đây chính là một số trường hợp - không đồng bộ đươc hết
 
     Windowns.app.label_12.show()
     Windowns.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
@@ -853,7 +853,6 @@ def Synchronous():
 
         if(DB.check_syn("backup_nongtrai_G00", i)==False): # phat hien ra la co data chua sync- vet tu day
             DB.update_data_backup_row("backup_nongtrai_G00", i, "ok")
-            # data = DB.get_data_n_row("backup_nongtrai_G00", 13)
             data = DB.get_data_backup_row("backup_nongtrai_G00", i)
             if(data!=[]):
                 CONSTANT.DATA_G00["NODE" + str(data[0][1])]["id"]        =  data[0][3]
@@ -866,7 +865,7 @@ def Synchronous():
                 if(i%13==0):
                     CONSTANT.DATA_G00["sub_id"] = "G00"
                     CONSTANT.DATA_G00["time"] = data[0][7]
-                    # print(json.dumps(CONSTANT.DATA_G00))
+                    print(json.dumps(CONSTANT.DATA_G00))
                     if(check_internet() == True): 
                         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G00))
                     else:
@@ -889,7 +888,7 @@ def Synchronous():
                 if(i%13 == 0):
                     CONSTANT.DATA_G01["sub_id"] = "G01"
                     CONSTANT.DATA_G01["time"] = data[0][7]
-                    # print(json.dumps(CONSTANT.DATA_G01))        
+                    print(json.dumps(CONSTANT.DATA_G01))        
                     if(check_internet() == True): 
                         client.publish(MQTT_TOPIC_SEND, json.dumps(CONSTANT.DATA_G01))
                     else:
@@ -897,80 +896,14 @@ def Synchronous():
         else:
             pass
 
-    # Controller - RELAY
+    # Controller - RELAY : Do relay chỉ cập nhập trạng thái khi mất mạng, mà khi có mạng hàm init_mqtt() sẽ
+    # lại get tất cả trạng thái relay lên rồi. Ở đây ta chỉ cập nhập sync thành "ok"
     for i in range(1, max_Relay + 1):
         if(DB.check_syn("backup_controller", i)==False): # phat hien ra la co data chua sync- vet tu day
             DB.update_data_backup_row("backup_controller", i, "ok")
             # data = DB.get_data_backup_row("backup_controller", i)
         else:
             pass
-
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["id"]        =  data[0][3]
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]     =  int(data[0][4])
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"] =  data[0][5]   
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["battery"]   =  data[0][6]    
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["time"]      =  data[0][7]
-        # CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["syn"]       =  data[0][8]
-
-        # if(data[0][1] == 27 ):
-        #     payload_data = {
-        #         'sub_id': "G02",
-        #         'time'  : CONSTANT.DATA_RELAY["time"],
-        #         "relay_1": {
-        #             "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"],
-        #             'value': str(CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]),
-        #             'battery': 100
-        #         }
-        #     }
-        # elif(data[0][1] == 28 ):
-        #     payload_data = {
-        #         'sub_id': "G02",
-        #         'time'  : CONSTANT.DATA_RELAY["time"],
-        #         "relay_2": {
-        #             "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"],
-        #             'value': str(CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]),
-        #             'battery': 100
-        #         }
-        #     }
-        # elif(data[0][1] == 29 ):
-        #     payload_data = {
-        #         'sub_id': "G02",
-        #         'time'  : CONSTANT.DATA_RELAY["time"],
-        #         "relay_3": {
-        #             "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"],
-        #             'value': str(CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]),
-        #             'battery': 100
-        #         }
-        #     }
-        # elif(data[0][1] == 30 ):
-        #     payload_data = {
-        #         'sub_id': "G02",
-        #         'time'  : CONSTANT.DATA_RELAY["time"],
-        #         "relay_4": {
-        #             "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"],
-        #             'value': str(CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]),
-        #             'battery': 100
-        #         }
-        #     }
-        # elif(data[0][1] == 31 ):
-        #     payload_data = {
-        #         'sub_id': "G02",
-        #         'time'  : CONSTANT.DATA_RELAY["time"],
-        #         "relay_5": {
-        #             "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["RF_signal"],
-        #             'value': str(CONSTANT.DATA_RELAY["NODE" + str(data[0][1])]["value"]),
-        #             'battery': 100
-        #         }
-        #     }
-        # else: 
-        #     pass
-        
-        # print(json.dumps(payload_data))
-
-        # if(check_internet() == True): 
-        #     client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_data))
-        # else:
-        #     pass
     
     Windowns.app.label_2.hide()
     Windowns.app.label_12.hide()                    
@@ -1095,9 +1028,10 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
     Init_Thread()
     Init_mqtt()
 
+
     blue = QTimer()
     blue.timeout.connect(Update_data)
-    blue.start(10000)   
+    blue.start(1000)   
 # end-mqtt-------------------------------------
 
     Windowns.app.show()
