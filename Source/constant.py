@@ -83,7 +83,7 @@ DATA_G00 = {
     "NODE21": {"node": 21,"name": "humidity1",         "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE23": {"node": 23,"name": "light1",            "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE25": {"node": 25,"name": "temperature1",      "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
-    "NODE32": {"node": 32,"name": "ph1",               "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
+    "NODE32": {"node": 32,"name": "ph1",               "id": "123456", "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
 }
 
 DATA_G01 = {
@@ -103,7 +103,7 @@ DATA_G01 = {
     "NODE22": {"node": 22,"name": "humidity2",         "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE24": {"node": 24,"name": "light2",            "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE26": {"node": 26,"name": "temperature2",      "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
-    "NODE33": {"node": 33,"name": "ph2",               "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"}
+    "NODE33": {"node": 33,"name": "ph2",               "id": "654321", "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"}
 }
 
 DATA_RELAY_G00 = {

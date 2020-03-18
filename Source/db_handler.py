@@ -233,7 +233,7 @@ class DataBase():
             self.curbk.execute(cmd)
             data = self.curbk.fetchall()
         lock.release()
-        if(data[0][8] != []):
+        if(data[0][8] != []): # nêu mà giá trị đấy tồn tại thì mới đọc
             if(data[0][8] == "ok"):
                 return True
             else:

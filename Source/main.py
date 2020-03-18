@@ -374,137 +374,26 @@ def Init_Lora(): # khoi tao GateWay do
                                   "KHÔNG THỂ KẾT NỐI")
         pass
 
-def check_internet():   # kiểm tra internet
-    try:
-        # connect to the host -- tells us if the host is actually
-        # reachable
-        socket.create_connection(("www.google.com", 80), 2)
-        return True
-    except:
-        return False
-
-def read_data():
-    global check, GW_Red, client, GW_Blue, app
-
-    now = datetime.now()
-    timestamp = int(datetime.timestamp(now))
-    now = datetime.fromtimestamp(timestamp)
-
-    data = GW_Red.read_data()# đọc dữ liệu từ con đỏ, con đỏ có dữ liệu sau đó đọc cảm biến  daviteq  rồi gửu lên
-                            # Nếu con đỏ ko đọc được data, => không đọc cảm biến bên daviteq
-    try:
-        if (len(data) != 0):
-            for i in range(0, len(data)):
-                data[i] = data[i].decode('utf-8') # giải mãi hex sang string
-            Str = data[0] #  Str dòng thứ nhất chứa thống LEN, vv...
-            Str1 = data[1] # Str1 chứa giá trị nhận
-            now = datetime.now()
-            timestamp = int(datetime.timestamp(now))
-            now = datetime.fromtimestamp(timestamp)
-            payload = {
-                'LEN': Str[Str.find('LEN:') + len("LEN:"):Str.find(',', Str.find('LEN:') + len("LEN:"))],
-                'RSSI': Str[Str.find('RSSI:') + len("RSSI:"):Str.find(',', Str.find('RSSI:') + len("RSSI:"))],
-                'SNR': Str[Str.find("SNR:") + len("SNR:"):len(Str) - 2],
-                'DATA': bytes.fromhex(Str1[Str1.find("\"") +
-                                        1: Str1.find("\"", 1 + int(Str1.find("\"")))]).decode('utf-8'),
-                'TIME': now}
-            # print(payload)
-
-            Data = payload['DATA'].split('_')
-            if (int(payload['RSSI']) >= -54 and int(payload['RSSI']) <= 0):
-                signal = "RẤT TỐT"
-            elif (int(payload['RSSI']) >= -69 and int(payload['RSSI']) <= -55):
-                signal = "TỐT"
-            elif (int(payload['RSSI']) >= -79 and int(payload['RSSI']) <= -70):
-                signal = "TRUNG BÌNH"
-            elif (int(payload['RSSI']) >= -100 and int(payload['RSSI']) <= -80):
-                signal = "YẾU"
-            else:
-                signal = "YẾU"
-            x = float(Data[6])
-            z = (x - 2.8)/(3.3-2.8) # phần trăm tin coi 2.8 đến 3.3 là 100%
-            payload_1 = { # tạo chuỗi JSON cho a Vững
-                'sub_id': "G05",
-                "temp_1": { # tên của node
-                    "RF_signal": signal,
-                    'value': Data[2],
-                    'battery': int(z*100)
-                },
-                "hum_1": {
-                    "RF_signal": signal,
-                    'value': Data[3],
-                    'battery':  int(z*100)
-                },
-                "hum_2": {
-                    "RF_signal": GW_Blue.get_RFsignal(3), # lấy RSSI
-                    'value': str(GW_Blue.get_main_parameter(3)),
-                    'battery': GW_Blue.get_battery(3)
-                },
-                "soil_1": {
-                    "RF_signal": signal,
-                    'value': Data[1],
-                    'battery':  int(z*100)
-                },
-                "soil_2": {
-                    "RF_signal": GW_Blue.get_RFsignal(2),
-                    'value': GW_Blue.get_main_parameter(2),
-                    'battery': GW_Blue.get_battery(2)
-                },
-                "ph_1": {
-                    "RF_signal": signal,
-                    'value': Data[5],
-                    'battery':  int(z*100)
-                },
-                "time": int(round(time.time() * 1000)),
-            }
-
-            print(payload_1)
-            
-            if (int(payload_1['soil_1']['value']) < 10):# check nhỏ hơn 10 bật máy bơm + nên sét một khoảng, comment lại để sửa
-                ctr_R1_bat()
-            else:
-                ctr_R1_tat()
-            update_data(payload_1) #Cap nhap du lieu len man hinh 
-            # if (int(float(payload_1['soil_2']['value'])) < 10):
-            #     # print("Bat may bom")
-            #     ctr_R1_bat()
-            # else:
-            #     # print("Tat may bom")
-            #     ctr_R1_tat()
-            #update_data(payload_1)
-
-        if (check_internet() == True): # nếu có mạng gửu chuỗi cho a vững
-            client.publish(MQTT_TOPIC_SEND, json.dumps(payload_1))    # gửu cho a vững
-        else:
-            print("Khong co mang")
-    except:
-        pass
- 
      
 def Update_GatewayRed():
-    global GW_Red, client, Windowns
-    now = datetime.now()
-    timestamp = int(datetime.timestamp(now))
-    now = datetime.fromtimestamp(timestamp)
+    global GW_Red, Windowns
 
     try:
         GW_Red.load_data()
         # kiểm tra khi mà đọc được cả 2 cảm biến PH
-        if((CONSTANT.DATA["NODE27"]["ID"] == "G00") & (CONSTANT.DATA["NODE28"]["ID"] == "G01")):
-            # Guu Data len
-            
+        if((CONSTANT.DATA_G00["NODE32"]["syn"] == "ok") & (CONSTANT.DATA_G01["NODE33"]["syn"] == "ok")):
             # Xoa bo ID
-            CONSTANT.DATA["NODE27"]["ID"] = ""
-            CONSTANT.DATA["NODE28"]["ID"] = ""
-        
-            # if (check_internet() == True): # nếu có mạng gửu chuỗi cho a vững
-            #     client.publish(MQTT_TOPIC_SEND, json.dumps(payload_1)) # gửu cho a vững
-            # else:
-            #     print("Khong co mang")
+            CONSTANT.DATA_G00["NODE32"]["syn"] = "error"
+            CONSTANT.DATA_G01["NODE33"]["syn"] = "error"
+
+            Windowns.Update_PH(CONSTANT.DATA_G00, 1)
+            Windowns.Update_PH(CONSTANT.DATA_G01, 2)
+
+            return True
+        else:
+            return False
     except:
         pass
-    for i in range(1, 3):
-        Windowns.Update_PH(CONSTANT.DATA, i)
 
 def Update_GatewayBlue():
     global GW_Blue, Windowns, client
@@ -714,11 +603,14 @@ def Update_GatewayBlue():
     # print(CONSTANT.DATA_G00)
     # print(CONSTANT.DATA_G01)
 
-
-def Update_data():
-    # Update_GatewayRed()
-    Update_GatewayBlue()
-    print("Update data")
+def check_internet():   # kiểm tra internet
+    try:
+        # connect to the host -- tells us if the host is actually
+        # reachable
+        socket.create_connection(("www.google.com", 80), 2)
+        return True
+    except:
+        return False
 
 
 # nên ghi vào một file text rồi đọc ra
@@ -748,7 +640,7 @@ def requirePort(): # Xac dinh COM
 def Thread_pump1(): # flag_pump1 = 0 - chưa bật máy bơm, chưa đếm lùi - nếu flag_pump1 = 1 thì ko làm gì cả
     # bỏ cờ flag_pump1,flag_pump1_N=> khi mà điều kiện true. sẽ ra lệnh bệnh máy bơm nhiều lần
     if((CONSTANT.flag_pump1 == 0) & (CONSTANT.flag_pump1_N == 1)): 
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
+        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, 10< y 20<đây chưa xét khoảng
             CONSTANT.SubThread_pump1.start(1000) # bắt đầu đếm lui
             ControlDevice(1, 1)                 # Bật máy bơm
             CONSTANT.flag_pump1   = 1          
@@ -1018,8 +910,18 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
     Init_Thread()
     Init_mqtt()
 
+
+ '''
+ + GateWay red : 1s bắn data lên một lần
+ + GateWay Blue : 2p truy xuất data một lần
+ Lúc updatate GateWay blue cũng là lúc bắn tất data của các nông trại lên.
+ '''   
+    read = QTimer()
+    read.timeout.connect(Update_GatewayRed)
+    read.start(1000)  
+
     blue = QTimer()
-    blue.timeout.connect(Update_data)
+    blue.timeout.connect(Update_GatewayBlue)
     blue.start(1000)   
 # end-mqtt-------------------------------------
 
