@@ -19,8 +19,6 @@ from Lora       import Gateway1
 from qt5        import qt5Class
 
 
-
-
 # define globale
 Windowns = qt5Class()
 DB       = SQLite.DataBase()
@@ -41,8 +39,24 @@ MQTT_TOPIC_STATUS  = 'control_status'
 
 MQTT_TOPIC_BACKUP  = 'backup_data'
 
-#--end----------------------------------------------
+def Init_mqtt():
+    global client
+    if (check_internet() == True): # kiểm tra internet nếu có gửu cho a vững
+        client = mqtt.Client()
+        client.username_pw_set(MQTT_USER, MQTT_PWD)
+        client.connect(MQTT_HOST, 1883)
+        client.on_connect = on_connect
+        client.on_message = on_message
+        client.loop_start()
+        get_status_all()
+        print("connect mqtt")
+    else:
+        Windowns.debugg("Lỗi kết nối", "Không có internet")
 
+#--end--------------------------------------------------------------------------------------------------------
+
+
+#---controller device------------------------------------------------------------------------------------------
 '''
 + hàm điểu khiển thiết bị
     + UpdatePicture() trong file qt5.py,  
@@ -183,8 +197,6 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
     pass
 
 
-
-
 '''
     + lấy trạng thái của từng relay
     G00 : relay_1, relay_2
@@ -273,11 +285,6 @@ def get_status(pos):
         print("disconnect to internet")
 
 
-'''
------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------------------------------------
-'''
-
 def on_connect(client, userdata, flags, rc):    # subscrie on  topic
     # print("Connected with result code " + str(rc))
     client.subscribe(MQTT_TOPIC_CONTROL)
@@ -307,11 +314,27 @@ def on_message(client, userdata, msg):  # received data - chua code xong
         if (data['relay_4']['value'] == '0'):
             ControlDevice(4, 0)
     if ("relay_5" in data):
-        if (data['relay_5']['value'] == '1'):
-            ControlDevice(5, 1)
-        if (data['relay_5']['value'] == '0'):
-            ControlDevice(5, 0)
 
+def Init_Button():
+    Windowns.app.tab2_btn_r1off.clicked.connect(lambda:ControlDevice(1, 0))
+    Windowns.app.tab2_btn_r1on.clicked.connect(lambda:ControlDevice(1, 1))
+
+    Windowns.app.tab2_btn_r2off.clicked.connect(lambda:ControlDevice(2, 0))
+    Windowns.app.tab2_btn_r2on.clicked.connect(lambda:ControlDevice(2, 1))
+
+    Windowns.app.tab2_btn_r3off.clicked.connect(lambda:ControlDevice(3, 0))
+    Windowns.app.tab2_btn_r3on.clicked.connect(lambda:ControlDevice(3, 1))
+
+    Windowns.app.tab2_btn_r4off.clicked.connect(lambda:ControlDevice(4, 0))
+    Windowns.app.tab2_btn_r4on.clicked.connect(lambda:ControlDevice(4, 1))
+
+    Windowns.app.tab2_btn_r5off.clicked.connect(lambda:ControlDevice(5, 0))
+    Windowns.app.tab2_btn_r5on.clicked.connect(lambda:ControlDevice(5, 1))  
+
+#---end ----------------------------------------------------------------------------------------------------------
+
+
+#--- Update Data--------------------------------------------------------------------------------------------------
 def Init_UI(): # khởi tạo GateWay_Xanh
     global GW_Blue
 
@@ -374,7 +397,6 @@ def Init_Lora(): # khoi tao GateWay do
                                   "KHÔNG THỂ KẾT NỐI")
         pass
 
-     
 def Update_GatewayRed():
     global GW_Red, Windowns
 
@@ -612,8 +634,7 @@ def check_internet():   # kiểm tra internet
     except:
         return False
 
-
-# nên ghi vào một file text rồi đọc ra
+# nên ghi vào một file text rồi đọc ra - or la fix cung luon
 def requirePort(): # Xac dinh COM 
     global GW_Blue_NAME, GW_Red_NAME 
     try:
@@ -629,6 +650,10 @@ def requirePort(): # Xac dinh COM
     # print(str)
     # # Đóng file
     # file.close()
+
+#---end-----------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -845,9 +870,6 @@ class YouThread(QtCore.QThread): # inheritance
 thread = YouThread() 
 thread.start()
 
-#---end------------------------------------------------------------------------------------------------
-
-
 
 def Init_Thread():
     CONSTANT.Thread_pump1.timeout.connect(Thread_pump1)
@@ -870,36 +892,7 @@ def Init_Thread():
     CONSTANT.Thread_lamp2.start(100)
     CONSTANT.SubThread_lamp2.timeout.connect(Windowns.countdown_lamp2)
 
-def Init_Button():
-    Windowns.app.tab2_btn_r1off.clicked.connect(lambda:ControlDevice(1, 0))
-    Windowns.app.tab2_btn_r1on.clicked.connect(lambda:ControlDevice(1, 1))
-
-    Windowns.app.tab2_btn_r2off.clicked.connect(lambda:ControlDevice(2, 0))
-    Windowns.app.tab2_btn_r2on.clicked.connect(lambda:ControlDevice(2, 1))
-
-    Windowns.app.tab2_btn_r3off.clicked.connect(lambda:ControlDevice(3, 0))
-    Windowns.app.tab2_btn_r3on.clicked.connect(lambda:ControlDevice(3, 1))
-
-    Windowns.app.tab2_btn_r4off.clicked.connect(lambda:ControlDevice(4, 0))
-    Windowns.app.tab2_btn_r4on.clicked.connect(lambda:ControlDevice(4, 1))
-
-    Windowns.app.tab2_btn_r5off.clicked.connect(lambda:ControlDevice(5, 0))
-    Windowns.app.tab2_btn_r5on.clicked.connect(lambda:ControlDevice(5, 1))  
-
-def Init_mqtt():
-    global client
-    if (check_internet() == True): # kiểm tra internet nếu có gửu cho a vững
-        client = mqtt.Client()
-        client.username_pw_set(MQTT_USER, MQTT_PWD)
-        client.connect(MQTT_HOST, 1883)
-        client.on_connect = on_connect
-        client.on_message = on_message
-        client.loop_start()
-        get_status_all()
-        print("connect mqtt")
-    else:
-        Windowns.debugg("Lỗi kết nối", "Không có internet")
-
+#---end------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
     global GW_Blue
@@ -911,11 +904,11 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
     Init_mqtt()
 
 
- '''
- + GateWay red : 1s bắn data lên một lần
- + GateWay Blue : 2p truy xuất data một lần
- Lúc updatate GateWay blue cũng là lúc bắn tất data của các nông trại lên.
- '''   
+    '''
+    + GateWay red : 1s bắn data lên một lần
+    + GateWay Blue : 2p truy xuất data một lần
+    Lúc updatate GateWay blue cũng là lúc bắn tất data của các nông trại lên.
+    '''   
     read = QTimer()
     read.timeout.connect(Update_GatewayRed)
     read.start(1000)  
