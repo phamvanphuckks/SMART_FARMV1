@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFileDialog, QAction, QGroupBox, QTableWidget, QTableWidgetItem, QWidget, QMessageBox
-from PyQt5.QtCore    import QTimer, QTime, QThread
+from PyQt5.QtCore    import QTimer, QTime, QThread, pyqtSignal
 from PyQt5           import QtCore,QtGui
 from datetime        import datetime   # date_time
 
@@ -10,8 +10,6 @@ import serial.tools.list_ports
 import random
 import paho.mqtt.client as mqtt # mqtt
 
-# gây bug khi auto-py-to-exe
-sys.path.append('modules')# pathname to forder consist modules
 # library programer development
 import constant     as  CONSTANT
 import db_handler   as  SQLite
@@ -834,12 +832,7 @@ def Thread_lamp2():
 def Synchronous():
     global client
 
-    Windowns.app.label_12.show()
-    Windowns.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
-    Windowns.app.label_2.show()
-    Windowns.app.label_2.setText("Đang đồng bộ")
-    Windowns.app.label_2.setStyleSheet("QLabel {color:rgb(0, 170, 0)}")  
-
+    Windowns.backup_Synchronous(1)
     max_G00   = DB.find_pos_backup("backup_nongtrai_G00")
     max_G01   = DB.find_pos_backup("backup_nongtrai_G01")
     max_Relay = DB.find_pos_backup("backup_controller")
@@ -905,20 +898,15 @@ def Synchronous():
         else:
             pass
     
-    Windowns.app.label_2.hide()
-    Windowns.app.label_12.hide()                    
-
+    Windowns.backup_Synchronous(2)
+    
     CONSTANT.flag_backup = 0
     CONSTANT.flag_backup_N = 1  
 
 def Backup():
 
-    Windowns.app.label_12.show()
-    Windowns.app.label_12.setPixmap(QtGui.QPixmap("icons\\backup.png"))
 
-    Windowns.app.label_2.show()
-    Windowns.app.label_2.setText("Backup dữ liệu")   
-    Windowns.app.label_2.setStyleSheet("QLabel {color:rgb(255, 0, 0)}")   
+    Windowns.backup_Synchronous(0)
 
     DB.creat_table("backup_nongtrai_G00")
     DB.creat_table("backup_nongtrai_G01")
@@ -933,8 +921,10 @@ def Backup():
 
 
 # theard sẽ chạy background - backup data khi mất mạng
+# không nên truy cập widgets and GUI từ một luồng khác ngoài luồng chính
 class YouThread(QtCore.QThread): # inheritance
     global client
+
     def __init__(self, parent=None):
         QtCore.QThread.__init__(self, parent)
 
@@ -1027,7 +1017,6 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
     Init_Button()
     Init_Thread()
     Init_mqtt()
-
 
     blue = QTimer()
     blue.timeout.connect(Update_data)

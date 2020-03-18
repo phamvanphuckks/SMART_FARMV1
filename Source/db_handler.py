@@ -233,10 +233,11 @@ class DataBase():
             self.curbk.execute(cmd)
             data = self.curbk.fetchall()
         lock.release()
-        if(data[0][8] == "ok"):
-            return True
-        else:
-            return False
+        if(data[0][8] != []):
+            if(data[0][8] == "ok"):
+                return True
+            else:
+                return False
 
     def remove_data(self, table_name, pos):
         lock.acquire(True)

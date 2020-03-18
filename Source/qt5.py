@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFileDialog, QAction, QGroupBox, QTableWidget, QTableWidgetItem, QWidget, QMessageBox
-from PyQt5.QtCore    import QTimer, QTime, QThread, pyqtSignal, Qt
+from PyQt5.QtCore    import QTimer, QTime, QThread, pyqtSignal, Qt, QObject
 from PyQt5.QtGui     import QPixmap, QCloseEvent, QColor
 from PyQt5           import QtWidgets, uic, QtGui, QtCore
 
@@ -7,8 +7,12 @@ import constant  as CONSTANT
 import sys, socket
 
 
-class qt5Class():
+class qt5Class(QtCore.QObject):
+    # The arguments to pyqtSignal define the types of objects that will be emit'd on that signal
+    my_signal = pyqtSignal(int)
+
     def __init__(self):
+        QtCore.QObject.__init__(self)
         self.App = QtWidgets.QApplication([])
         self.app = uic.loadUi("guis\\main.ui")
         self.app.closeEvent = self.closeEvent # khi close, gọi sự kiện closeEvent
@@ -16,6 +20,29 @@ class qt5Class():
         self.LCD_Number()
         self.initialize()
         # self.Update_RF_Relay()
+
+    def backup_Synchronous(self, value):
+        self.my_signal.connect(self.backup_Synchronous_Slot)
+        self.my_signal.emit(value)
+
+    @QtCore.pyqtSlot(int)
+    def backup_Synchronous_Slot(self, value):
+        if(value==0):
+            self.app.label_12.show()
+            self.app.label_12.setPixmap(QtGui.QPixmap("icons\\backup.png"))
+
+            self.app.label_2.show()
+            self.app.label_2.setText("Backup dữ liệu")   
+            self.app.label_2.setStyleSheet("QLabel {color:rgb(255, 0, 0)}")  
+        elif(value == 1):
+            self.app.label_12.show()
+            self.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
+            self.app.label_2.show()
+            self.app.label_2.setText("Đang đồng bộ")
+            self.app.label_2.setStyleSheet("QLabel {color:rgb(0, 170, 0)}") 
+        else:
+            self.app.label_2.hide()
+            self.app.label_12.hide()            
 
     def debugg(self, error, information):
         QMessageBox.critical(self.app, error, information)
