@@ -1,8 +1,3 @@
-/*
-    File Name: delay.c
-    Author: khanh pham
-    Date: 21-07-2019
-*/
 #include "delay.h"
 
 /*note: you must call fucntion SystemCoreClockUpdate() after this fucntion */

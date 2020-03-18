@@ -366,7 +366,7 @@ def Init_UI(): # khởi tạo GateWay_Xanh
         sys.exit()
 
 def Init_Lora(): # khoi tao GateWay do
-    global GW_Red, app
+    global GW_Red
     ports = serial.tools.list_ports.comports() # mảng những ports các kết nối vào máy tính nhúng
     check_device = ''
 
@@ -405,7 +405,6 @@ def Init_Lora(): # khoi tao GateWay do
 
 def Update_GatewayRed():
     global GW_Red, Windowns
-
     try:
         GW_Red.load_data()
         # kiểm tra khi mà đọc được cả 2 cảm biến PH
@@ -628,7 +627,7 @@ def Update_GatewayBlue():
     #---end-----------------------------------------------------------------------------
 
 
-    # update GUI - thieu PH
+    # update GUI
     for i in range(1, 11):
         Windowns.Update_SM(CONSTANT.DATA_G00, i, "G00")
 
@@ -937,7 +936,7 @@ def Init_Thread():
 
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
-    global GW_Blue
+
     # requirePort()
     # Init_UI()
     # Init_Lora()
@@ -947,14 +946,15 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
 
 
     '''
-    + GateWay red : 1s bắn data lên một lần
+    + GateWay red  : 1s bắn data lên một lần
     + GateWay Blue : 2p truy xuất data một lần
     Lúc updatate GateWay blue cũng là lúc bắn tất data của các nông trại lên.
     '''   
-    read = QTimer()
-    read.timeout.connect(Update_GatewayRed)
-    read.start(1000)  
+    red = QTimer()
+    red.timeout.connect(Update_GatewayRed)
+    red.start(1000)  
 
+    
     blue = QTimer()
     blue.timeout.connect(Update_GatewayBlue)
     blue.start(1000)   

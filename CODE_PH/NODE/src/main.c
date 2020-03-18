@@ -1,55 +1,36 @@
-/*
-    File Name: main.c
-    Author: khanh pham
-    Date: 21-07-2019
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
-#include "stm32l1xx.h"
 
 #include "delay.h"
 #include "init.h"
 #include "usart.h"
 #include "lora.h"
-#include "ph.h"
-#include "kalman.h"
-#include "stm32_rtc.h"
-
+#include "stm32l1xx_adc.h"
 
 #define SIZE                256
-
 #define Offset              0.0           // deviation compensate - Check to ensure the error does not exceed 0.3.
-#define Offset_axit         0.00
-#define Offset_bazo         0.00
+#define ArrayLenth          50    
 
-#define ArrayLenth          50    // times of collection
-// kalman
-float _err_measure = 1, _err_estimate = 1, _q = 0.1;
-double _current_estimate, _last_estimate, _kalman_gain;
 int pHArray[ArrayLenth];   // Store the average value of the sensor feedback
 void ADC_Configuration(void);
 double avergearray(int* arr, int number);
-uint16_t Get_Avarage(void);
 
 double voltage = 0.0, pHValue = 0.0, getvalue = 0.0;
 
-PH_InitTypeDef PH_InitStructure;
 
 /*define pin LEDs*/
-#define         LED             GPIO_Pin_8  //PB8
+#define         LED             GPIO_Pin_8 
 
 char UID_TX[SIZE]= "G01";
 char TX_buf[SIZE];
 
-volatile uint8_t old_buf = 0x00;
+volatile uint8_t old_buf  = 0x00;
 volatile uint8_t RxBuffer = 0x00, array[8];
-int i = 0;
+int i = 0, j=0;
+char Buffer[7], Battery[7], Battery_1[7]="0";
+uint8_t en = 1, start = 0;
 
-uint8_t en = 1, j = 0, start = 0;
 
-char value[10], Buffer[7], Battery[7], Battery_1[7]="0";
-    
 int main(){
     
 	SystemClock_Config();
@@ -60,18 +41,27 @@ int main(){
 	
 	Uart1_config();
 	Uart2_config();
-	Uart3_config();
 	delay_ms(1500);
+	Uart3_config();
 	
+/*
+		Hàm LORA_Enable() và ADC_Enable()
+		Chua biet truyen vao 0 hay 1 no moi enable
+		Kha nang cao la 2 cai lech nhau 
+		Do 1 chan MOSFET cua Lora - VCC,  1 chan dau voi VDK
+			 1 chan MOSFET cua ADC  - GND,  1 chan dau voi VDK
+	
+		Test 4 TH : 11,10,01,00
+*/	
+	
+	Lora_PowerOn();	
+	LORA_Enable(1);
 	lora_enterTestMode();
 
-	LORA_Enable(1);
-	ADC_Enable(0);
-
+	ADC_Enable(1);
 	ADC_Configuration();
 	delay_ms(1000);
-	InitPH(&PH_InitStructure);
-
+	
 	while(1){
 			/*doc pin*/
 			UART_PutStr(USART2, "AT+VDD\r\n");
@@ -90,12 +80,11 @@ int main(){
 	 
 			/*doc PH*/
 			getvalue = avergearray(pHArray, 20);
-			voltage = (getvalue/1024.0)*3.3;// read the voltage - VREF+ : 3.3V
-			int pHValue  = 0 ;
-			pHValue =	(int)3.5*((int)voltage) + Offset;
+			voltage  = (getvalue/1024.0)*3.3;// read the voltage - VREF+ : 3.3V
+			pHValue  =	(int)3.5*((int)voltage) + Offset;
 			
 			/*gui du lieu qua Lora*/
-			sprintf(TX_buf,"%s_%d_%s\n", UID_TX, pHValue, Battery_1);				
+			sprintf(TX_buf,"%s_%d_%s\n", UID_TX, (int)pHValue, Battery_1);				
 			lora_enterTestMode();
 			printf("AT+TEST=TXLRSTR,%s\r\n", TX_buf);
 
@@ -104,17 +93,6 @@ int main(){
 			GPIO_ToggleBits(GPIOB, LED);
 //	    printf("AT\r\n");
 	}    
-}
-
-void RTC_Alarm_IRQHandler(void){
-  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET){
-    /* Reconfig RTC times */
-     RTC_setupTime(0,0,0);
-    /* Clear RTC AlarmA Flags */
-    RTC_ClearITPendingBit(RTC_IT_ALRA);  
-    /* Clear the EXTIL line 17 */
-    EXTI_ClearITPendingBit(EXTI_Line17);
-  }
 }
 
 void USART2_IRQHandler(){
@@ -140,7 +118,7 @@ void USART3_IRQHandler(){
 	RxBuffer = (uint8_t)USART_ReceiveData(USART3);
 	array[i] = RxBuffer;
 	i++;
-	if(i==7) i = 0;
+	if(i==7) i=0;
 }
 
 void ADC_Configuration(){
@@ -187,7 +165,6 @@ double avergearray(int* arr, int number){
   long amount = 0;
 	// sampling 
 	while(j < number){
-//		arr[j] = updateEstimate(ADC_GetConversionValue(ADC1));
         arr[j] = ADC_GetConversionValue(ADC1);
 		j++;
 	}
@@ -227,4 +204,3 @@ double avergearray(int* arr, int number){
   }//if
   return avg;
 }
-

@@ -8,7 +8,7 @@ void lora_enterTestMode(void){
     
     UART_PutStr(USART2, "AT+MODE=TEST\r\n");
     delay_ms(100);
-    // Set RF Configurations
+
     UART_PutStr(USART2,"AT+TEST=RFCFG,433\r\n");
     delay_ms(100);
 }

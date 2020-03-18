@@ -183,7 +183,7 @@ void ADC_Enable(uint8_t en){
 enale power of LORA
     1 : enable
     0 : disable
-PB1: LORA_EN
+PA1: LORA_EN
 */
 void LORA_Enable(uint8_t en){
     en == 1 ? GPIO_ResetBits(GPIOA, GPIO_Pin_1): GPIO_SetBits(GPIOA, GPIO_Pin_1);

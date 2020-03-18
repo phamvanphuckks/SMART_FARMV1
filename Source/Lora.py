@@ -30,7 +30,7 @@ class Gateway1():
     def load_data(self):
         try:
             data = self.read_data() # đọc dữ liệu từ con đỏ, con đỏ có dữ liệu sau đó đọc cảm biến  daviteq  rồi gửu lên
-            print("data")
+            print("data_raw")
             print(data)
             if(len(data) != 0):
                 for i in range(0, len(data)):
@@ -49,13 +49,17 @@ class Gateway1():
                     'DATA': bytes.fromhex(Str1[Str1.find("\"") +
                                             1: Str1.find("\"", 1 + int(Str1.find("\"")))]).decode('utf-8'),
                     'TIME': now}
-                print("payload")
+                print("payload_raw")
                 print(payload)
 
                 # trước thì gái trị cảm biến gửu lên theo payload['DATA'] =  G00_độ ẩm đất_nhiệt độ_ánh sáng_ .... 
                 # tách data thôi - có thể bỏ or không Data = payload['DATA'].split('_') 
                 # ở đây chưa bỏ
                 Data = payload['DATA'].split('_') 
+
+                print("Data-split")
+                print(Data)
+                
                 if (int(payload['RSSI'])   >= -54 and int(payload['RSSI']) <= 0):
                     signal = "Perfect"
                 elif (int(payload['RSSI']) >= -69 and int(payload['RSSI']) <= -55):
