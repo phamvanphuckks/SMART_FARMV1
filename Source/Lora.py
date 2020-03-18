@@ -28,10 +28,10 @@ class Gateway1():
         return self.ser.readlines()
 
     def load_data(self):
-        data = self.read_data() # đọc dữ liệu từ con đỏ, con đỏ có dữ liệu sau đó đọc cảm biến  daviteq  rồi gửu lên
-        
-        print(data)
         try:
+            data = self.read_data() # đọc dữ liệu từ con đỏ, con đỏ có dữ liệu sau đó đọc cảm biến  daviteq  rồi gửu lên
+            print("data")
+            print(data)
             if(len(data) != 0):
                 for i in range(0, len(data)):
                     data[i] = data[i].decode('utf-8') # giải mãi hex sang string
@@ -49,6 +49,7 @@ class Gateway1():
                     'DATA': bytes.fromhex(Str1[Str1.find("\"") +
                                             1: Str1.find("\"", 1 + int(Str1.find("\"")))]).decode('utf-8'),
                     'TIME': now}
+                print("payload")
                 print(payload)
 
                 # trước thì gái trị cảm biến gửu lên theo payload['DATA'] =  G00_độ ẩm đất_nhiệt độ_ánh sáng_ .... 

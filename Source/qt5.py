@@ -647,32 +647,20 @@ class qt5Class(QtCore.QObject):
             pass
 
 
-    # mới xử lý được từ 2 phút - 00 : nhưng chưa có chỗ nào phục hồi lại 
-    # giá trị 2p đó - bug
+    # format 5:00 - time = ("{0}:{1}".format(m,s))
     def LCD_Number(self):
         global h,m,s
-
         # time = QTime.currentTime()
         # text = time.toString('hh:mm:ss')
         # self.app.lcdNumber.display(text)
         # time = ("{0}:{1}".format(5,"00"))
         # self.app.lcdNumber.setDigitCount(5) # hien thi so dem
 
-        # current_time = datetime.now().strftime("%H:%M:%S")
-        # self.app.lcdNumber_2.display(text)
-        # self.app.lcdNumber_3.display(text)
-        # self.app.lcdNumber_4.display(text)
-        # self.app.lcdNumber_5.display(text)
-
         self.app.lcdNumber.hide()
         self.app.lcdNumber_2.hide()
         self.app.lcdNumber_3.hide()
         self.app.lcdNumber_4.hide()
         self.app.lcdNumber_5.hide()
-        pass
-
-
-    # format 5:00 - time = ("{0}:{1}".format(m,s))
 
     def countdown_pump1(self):
         if (CONSTANT.TIME["pump1"]["second"] > 0):

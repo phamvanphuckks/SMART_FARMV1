@@ -314,6 +314,12 @@ def on_message(client, userdata, msg):  # received data - chua code xong
         if (data['relay_4']['value'] == '0'):
             ControlDevice(4, 0)
     if ("relay_5" in data):
+        if (data['relay_5']['value'] == '1'):
+            ControlDevice(5, 1)
+        if (data['relay_5']['value'] == '0'):
+            ControlDevice(5, 0)
+    else:
+        pass
 
 def Init_Button():
     Windowns.app.tab2_btn_r1off.clicked.connect(lambda:ControlDevice(1, 0))
@@ -583,6 +589,42 @@ def Update_GatewayBlue():
         else:
             pass
 
+    #PH
+    for i in range(32, 34):
+        if(i==32):
+            CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1,100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
+            CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+            CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G00["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            if (check_internet() == True): # nếu có mạng gửu Data lên server
+                DB.insert_data_row("nongtrai_G00",CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
+                CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
+                CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
+            else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
+                DB.insert_data_backup_row("backup_nongtrai_G00",CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
+                CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
+                CONSTANT.DATA_G00["NODE" + str(i)]["battery"], CONSTANT.DATA_G00["NODE" + str(i)]["time"],"ok")  
+        elif(i==33):
+            CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1,100)
+            CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
+            CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
+            CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
+            CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G01["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            if (check_internet() == True): # nếu có mạng gửu Data lên server
+                DB.insert_data_row("nongtrai_G01",CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
+                CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
+                CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"ok")  
+            else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
+                DB.insert_data_backup_row("backup_nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
+                CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
+                CONSTANT.DATA_G01["NODE" + str(i)]["battery"], CONSTANT.DATA_G01["NODE" + str(i)]["time"],"error")  
+        else:
+            pass
+    
     #---end-----------------------------------------------------------------------------
 
 
@@ -652,8 +694,6 @@ def requirePort(): # Xac dinh COM
     # file.close()
 
 #---end-----------------------------------------------------------------------------------------------------------
-
-
 
 
 
@@ -893,6 +933,8 @@ def Init_Thread():
     CONSTANT.SubThread_lamp2.timeout.connect(Windowns.countdown_lamp2)
 
 #---end------------------------------------------------------------------------------------------------
+
+
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
     global GW_Blue
