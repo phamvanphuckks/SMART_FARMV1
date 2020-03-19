@@ -2,6 +2,9 @@ from PyQt5.QtCore import QTimer, QTime, QThread, pyqtSignal, QDate, Qt
 import random
 
 
+#api
+global auth_token
+
 # countdown
 
 global TIME, DEVICE

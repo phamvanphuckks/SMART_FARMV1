@@ -55,7 +55,7 @@ class Gateway1():
                 elif (int(payload['RSSI']) >= -100 and int(payload['RSSI']) <= -80):
                     signal = "Bad"
                 else:
-                    signal = "Worse"
+                    pass
 
                 # Data[0] tên của thiết bị
                 if (Data[0] == "G00"):

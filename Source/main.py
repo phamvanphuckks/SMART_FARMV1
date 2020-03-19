@@ -4,6 +4,7 @@ from PyQt5           import QtCore,QtGui
 from datetime        import datetime   # date_time
 
 import sys, time, json, socket    # library in python
+import requests
 
 import serial
 import serial.tools.list_ports
@@ -929,15 +930,88 @@ def Init_Thread():
 
 #---end------------------------------------------------------------------------------------------------
 
+def Init_api():
+    with open('api\\config.json') as f: 
+        account = json.load(f)
 
+    response = requests.post("https://smartfarm.tinasoft.com.vn/api/v1/auth", data=account)
+    login    = response.json()
+
+    headers = {
+        "Authorization":"Bearer "+login["auth_token"],
+        "Accept":"/",
+        "Cache-Control":"no-cache",
+        "Connection": "keep-alive",
+    }
+    try:
+        response_get = requests.get("https://smartfarm.tinasoft.com.vn/api/v1/information",headers=headers);
+        response_get = response_get.json()
+    except:
+        return False
+
+    # G00
+    CONSTANT.L['min'] = response_get[0]["stage"]["min_light"]
+    CONSTANT.L['max'] = response_get[0]["stage"]["max_light"]
+    CONSTANT.PH['min'] = response_get[0]["stage"]["min_PH"]
+    CONSTANT.PH['max'] = response_get[0]["stage"]["max_PH"]
+    CONSTANT.T['min'] = response_get[0]["stage"]["min_temp"]
+    CONSTANT.T['max'] = response_get[0]["stage"]["max_temp"]
+    CONSTANT.H['min'] = response_get[0]["stage"]["min_hum"]
+    CONSTANT.SM['min'] = response_get[0]["stage"]["min_soil_moisture"]
+    CONSTANT.SM['max'] = response_get[0]["stage"]["max_soil_moisture"]
+
+    #update GUI
+    Windowns.app.tab1_T_min.setText(str(CONSTANT.T['min']))
+    Windowns.app.tab1_T_max.setText(str(CONSTANT.T['max']))
+
+    Windowns.app.tab1_L_min.setText(str(CONSTANT.L['min']))
+    Windowns.app.tab1_L_max.setText(str(CONSTANT.L['max']))
+
+    Windowns.app.tab1_H_min.setText(str(CONSTANT.H['min']))
+    Windowns.app.tab1_H_max.setText(str(CONSTANT.H['max']))
+
+    Windowns.app.tab1_PH_min.setText(str(CONSTANT.PH['min']))
+    Windowns.app.tab1_PH_max.setText(str(CONSTANT.PH['max']))
+
+    if(response_get[0]["stage"]["name"]=="germination stage"):
+        Windowns.app.tab1_stage.setText("Cây con")
+    elif(response_get[0]["stage"]["name"]=="development stage"):
+        Windowns.app.tab1_stage.setText("Cây trưởng thành")
+    elif(response_get[0]["stage"]["name"]=="harvest stage"):
+        Windowns.app.tab1_stage.setText("Thu hoạch")
+    else:
+        pass
+
+    if(response_get[0]["seed_name"]=="tomato"):
+        Windowns.app.label.setText("VƯỜN CÀ CHUA")
+        Windowns.app.label_48.setText("CÀ CHUA")
+        Windowns.app.label_50.setText("Hạt giống: "+"Cà Chua")
+    elif(response_get[0]["seed_name"]=="pakchoi"):
+        Windowns.app.label.setText("VƯỜN CẢI CHÍP")
+        Windowns.app.label_48.setText("CẢI CHÍP")
+        Windowns.app.label_50.setText("Hạt giống: "+"Cải Chíp")
+    elif(response_get[0]["seed_name"]=="brassica"):
+        Windowns.app.label.setText("VƯỜN CẢI NGỌT")
+        Windowns.app.label_48.setText("CẢI NGỌT")
+        Windowns.app.label_50.setText("Hạt giống: "+"Cải Ngọt")
+    elif(response_get[0]["seed_name"]=="cucumber"):
+        Windowns.app.label.setText("VƯỜN DƯA CHUỘT")
+        Windowns.app.label_48.setText("Dưa Chuột")
+        Windowns.app.label_50.setText("Hạt giống: "+"Dưa Chuột")
+    elif(response_get[0]["seed_name"]=="cabbage"):
+        Windowns.app.label.setText("VƯỜN BẮP CẢI")
+        Windowns.app.label_48.setText("Bắp Cải")
+        Windowns.app.label_50.setText("Hạt giống: "+"Bắp Cải")
+    else:
+        pass
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
-
-    requirePort()
+    Init_api()
+    # requirePort()
     # Init_UI()
-    Init_Lora()
+    # Init_Lora()
     Init_Button()
-    Init_Thread()
+    # Init_Thread()
     Init_mqtt()
 
 
@@ -950,7 +1024,7 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
     red.timeout.connect(Update_GatewayRed)
     red.start(1000)  
 
-    
+
     blue = QTimer()
     blue.timeout.connect(Update_GatewayBlue)
     blue.start(1000)   
