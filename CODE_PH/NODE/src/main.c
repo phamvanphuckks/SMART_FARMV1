@@ -21,7 +21,7 @@ double voltage = 0.0, pHValue = 0.0, getvalue = 0.0;
 /*define pin LEDs*/
 #define         LED             GPIO_Pin_8 
 
-char UID_TX[SIZE]= "G01";
+char UID_TX[SIZE] = "G01";
 char TX_buf[SIZE];
 
 volatile uint8_t old_buf  = 0x00;
@@ -44,15 +44,6 @@ int main(){
 	delay_ms(1500);
 	Uart3_config();
 	
-/*
-		Hàm LORA_Enable() và ADC_Enable()
-		Chua biet truyen vao 0 hay 1 no moi enable
-		Kha nang cao la 2 cai lech nhau 
-		Do 1 chan MOSFET cua Lora - VCC,  1 chan dau voi VDK
-			 1 chan MOSFET cua ADC  - GND,  1 chan dau voi VDK
-	
-		Test 4 TH : 11,10,01,00
-*/	
 	
 	Lora_PowerOn();	
 	LORA_Enable(1);

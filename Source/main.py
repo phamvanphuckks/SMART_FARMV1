@@ -400,13 +400,16 @@ def Init_Lora(): # khoi tao GateWay do
         print(GW_Red.read_data())
     except:
         QMessageBox.critical(Windowns.app, "LỖI KẾT NỐI COM",
-                                  "KHÔNG THỂ KẾT NỐI")
+                                  "KHÔNG THỂ KẾT NỐI")  
         pass
 
 def Update_GatewayRed():
     global GW_Red, Windowns
     try:
         GW_Red.load_data()
+
+        print(CONSTANT.DATA_G01["NODE33"])
+        print(CONSTANT.DATA_G01["NODE32"])
         # kiểm tra khi mà đọc được cả 2 cảm biến PH
         if((CONSTANT.DATA_G00["NODE32"]["syn"] == "ok") & (CONSTANT.DATA_G01["NODE33"]["syn"] == "ok")):
             # Xoa bo ID
@@ -679,8 +682,8 @@ def check_internet():   # kiểm tra internet
 def requirePort(): # Xac dinh COM 
     global GW_Blue_NAME, GW_Red_NAME 
     try:
-        CONSTANT.GW_Blue_NAME  = input("Lua chon COM cho GateWay Xanh: ")
-        # CONSTANT.GW_Red_NAME   = input("Lua chon COM cho GateWay Do: ")
+        # CONSTANT.GW_Blue_NAME  = input("Lua chon COM cho GateWay Xanh: ")
+        CONSTANT.GW_Red_NAME   = input("Lua chon COM cho GateWay Do: ")
     except KeyboardInterrupt:
         sys.exit()
 
@@ -937,9 +940,9 @@ def Init_Thread():
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
 
-    # requirePort()
+    requirePort()
     # Init_UI()
-    # Init_Lora()
+    Init_Lora()
     Init_Button()
     Init_Thread()
     Init_mqtt()

@@ -13,8 +13,8 @@ Section Cross References
     delay.o(i.SystemClock_Config) refers to stm32l1xx_rcc.o(i.RCC_GetSYSCLKSource) for RCC_GetSYSCLKSource
     delay.o(i.delay_ms) refers to delay.o(i.Systick_start) for Systick_start
     delay.o(i.delay_us) refers to delay.o(i.Systick_start) for Systick_start
-    init.o(i.ADC_Enable) refers to stm32l1xx_gpio.o(i.GPIO_ResetBits) for GPIO_ResetBits
     init.o(i.ADC_Enable) refers to stm32l1xx_gpio.o(i.GPIO_SetBits) for GPIO_SetBits
+    init.o(i.ADC_Enable) refers to stm32l1xx_gpio.o(i.GPIO_ResetBits) for GPIO_ResetBits
     init.o(i.InitPinEN_config) refers to stm32l1xx_rcc.o(i.RCC_AHBPeriphClockCmd) for RCC_AHBPeriphClockCmd
     init.o(i.InitPinEN_config) refers to stm32l1xx_gpio.o(i.GPIO_Init) for GPIO_Init
     init.o(i.InitPinEN_config) refers to stm32l1xx_gpio.o(i.GPIO_SetBits) for GPIO_SetBits

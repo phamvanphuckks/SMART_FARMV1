@@ -175,7 +175,7 @@ enale power of ADC
 PA7: ADC_EN
 */
 void ADC_Enable(uint8_t en){
-    en == 1 ? GPIO_ResetBits(GPIOA, GPIO_Pin_7): GPIO_SetBits(GPIOA, GPIO_Pin_7);
+    en == 1 ? GPIO_SetBits(GPIOA, GPIO_Pin_7): GPIO_ResetBits(GPIOA, GPIO_Pin_7);
 
 }
 
