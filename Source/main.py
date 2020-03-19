@@ -681,19 +681,12 @@ def check_internet():   # kiểm tra internet
 # nên ghi vào một file text rồi đọc ra - or la fix cung luon
 def requirePort(): # Xac dinh COM 
     global GW_Blue_NAME, GW_Red_NAME 
-    try:
-        # CONSTANT.GW_Blue_NAME  = input("Lua chon COM cho GateWay Xanh: ")
-        CONSTANT.GW_Red_NAME   = input("Lua chon COM cho GateWay Do: ")
-    except KeyboardInterrupt:
-        sys.exit()
-
-    # su dung viec doc file
-    # file = open("port\\port.txt", "r")
-    # CONSTANT.GW_Blue_NAME = file.readline()
-    # CONSTANT.GW_Red_NAME  = file.readline()
-    # print(str)
-    # # Đóng file
-    # file.close()
+    #su dung viec doc file
+    file = open("port\\port.txt", "r")
+    CONSTANT.GW_Blue_NAME = file.readline()
+    CONSTANT.GW_Red_NAME  = file.readline()
+    # Đóng file
+    file.close()
 
 #---end-----------------------------------------------------------------------------------------------------------
 
