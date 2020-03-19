@@ -4,7 +4,7 @@ from PyQt5           import QtCore,QtGui
 from datetime        import datetime   # date_time
 
 import sys, time, json, socket    # library in python
-import requests
+import requests             # api
 
 import serial
 import serial.tools.list_ports
@@ -322,6 +322,16 @@ def on_message(client, userdata, msg):  # received data - chua code xong
     else:
         pass
 
+def Auto():
+    global en_Relay
+    CONSTANT.en_Relay = not CONSTANT.en_Relay
+    if(CONSTANT.en_Relay == True):
+        Windowns.app.btn_auto.setStyleSheet(
+                        "QPushButton {background-color: rgb(0, 170, 0);}")
+    else:
+        Windowns.app.btn_auto.setStyleSheet(
+                        "QPushButton {background-color: rgb(229, 229, 229);}")
+
 def Init_Button():
     Windowns.app.tab2_btn_r1off.clicked.connect(lambda:ControlDevice(1, 0))
     Windowns.app.tab2_btn_r1on.clicked.connect(lambda:ControlDevice(1, 1))
@@ -337,6 +347,8 @@ def Init_Button():
 
     Windowns.app.tab2_btn_r5off.clicked.connect(lambda:ControlDevice(5, 0))
     Windowns.app.tab2_btn_r5on.clicked.connect(lambda:ControlDevice(5, 1))  
+
+    Windowns.app.btn_auto.clicked.connect(Auto)
 
 #---end ----------------------------------------------------------------------------------------------------------
 
@@ -459,26 +471,26 @@ def Update_GatewayBlue():
     # # cảm biến nhiệt độ
 
     #----random-------------------------------------------------------------------------------
-    for i in range(1, 11):
-        CONSTANT.DATA_G00["NODE" + str(i)]["value"]       = random.randint(1,100)
-        CONSTANT.DATA_G00["NODE" + str(i)]["battery"]     = random.randint(1,100)
-        CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = "perfect"
-        CONSTANT.DATA_G00["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-        CONSTANT.DATA_G00["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        CONSTANT.DATA_G00["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # for i in range(1, 11):
+    #     CONSTANT.DATA_G00["NODE" + str(i)]["value"]       = GW_Blue.get_main_parameter(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G00["NODE" + str(i)]["battery"]     = GW_Blue.get_battery(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]   = GW_Blue.get_RFsignal(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G00["NODE" + str(i)]["id"]          = GW_Blue.get_node_id(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G00["NODE" + str(i)]["time"]        = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # CONSTANT.DATA_G00["time"]                         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if (check_internet() == True): # nếu có mạng gửu Data lên server
         DB.insert_data_nongtraiG00("nongtrai_G00", "ok")
     else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
         DB.insert_data_backup_nongtraiG00("backup_nongtrai_G00", "error")
 
-    for i in range(11, 21):
-        CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = random.randint(1, 100)
-        CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = random.randint(1,100)
-        CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
-        CONSTANT.DATA_G01["NODE" + str(i)]["id"]       = random.randint(10000,99999)
-        CONSTANT.DATA_G01["NODE" + str(i)]["time"]     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        CONSTANT.DATA_G01["time"]                      = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # for i in range(11, 21):
+    #     CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = GW_Blue.get_main_parameter(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G01["NODE" + str(i)]["battery"]      = GW_Blue.get_battery(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = GW_Blue.get_RFsignal(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G01["NODE" + str(i)]["id"]           = GW_Blue.get_node_id(i, CONSTANT.SENSOR["soil_moistrure"])
+    #     CONSTANT.DATA_G01["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # CONSTANT.DATA_G01["time"]                          = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if (check_internet() == True): # nếu có mạng gửu Data lên server
         DB.insert_data_nongtraiG01("nongtrai_G01", "ok")  
@@ -491,9 +503,9 @@ def Update_GatewayBlue():
             CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = "perfect"
-            CONSTANT.DATA_G00["NODE" + str(i)]["id"]           = random.randint(10000,99999)
-            CONSTANT.DATA_G00["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G00["time"]                          = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            CONSTANT.DATA_G00["NODE" + str(i)]["id"]           =  random.randint(10000,99999)
+            CONSTANT.DATA_G00["NODE" + str(i)]["time"]         =  datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
             if (check_internet() == True): # nếu có mạng gửu Data lên server
                 DB.insert_data_row("nongtrai_G00", CONSTANT.DATA_G00["NODE" + str(i)]["node"],CONSTANT.DATA_G00["NODE" + str(i)]["name"],CONSTANT.DATA_G00["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G00["NODE" + str(i)]["value"],CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"],
@@ -508,7 +520,6 @@ def Update_GatewayBlue():
             CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = "perfect"
             CONSTANT.DATA_G01["NODE" + str(i)]["id"]           = random.randint(10000,99999)
             CONSTANT.DATA_G01["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            CONSTANT.DATA_G01["time"]                          = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if (check_internet() == True): # nếu có mạng gửu Data lên server
                 DB.insert_data_row("nongtrai_G01", CONSTANT.DATA_G01["NODE" + str(i)]["node"],CONSTANT.DATA_G01["NODE" + str(i)]["name"],CONSTANT.DATA_G01["NODE" + str(i)]["id"],
                 CONSTANT.DATA_G01["NODE" + str(i)]["value"],CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"],
@@ -701,7 +712,7 @@ def requirePort(): # Xac dinh COM
 def Thread_pump1(): # flag_pump1 = 0 - chưa bật máy bơm, chưa đếm lùi - nếu flag_pump1 = 1 thì ko làm gì cả
     # bỏ cờ flag_pump1,flag_pump1_N=> khi mà điều kiện true. sẽ ra lệnh bệnh máy bơm nhiều lần
     if((CONSTANT.flag_pump1 == 0) & (CONSTANT.flag_pump1_N == 1)): 
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, 10< y 20<đây chưa xét khoảng
+        if((random.randint(1, 20) > 18) & (CONSTANT.en_Relay == True)): # kiểm tra điều kiện- nhớ phải xét khoảng, 10< y 20<đây chưa xét khoảng
             CONSTANT.SubThread_pump1.start(1000) # bắt đầu đếm lui
             ControlDevice(1, 1)                 # Bật máy bơm
             CONSTANT.flag_pump1   = 1          
@@ -717,7 +728,7 @@ def Thread_pump1(): # flag_pump1 = 0 - chưa bật máy bơm, chưa đếm lùi 
 
 def Thread_pump2():
     if((CONSTANT.flag_pump2 == 0) & (CONSTANT.flag_pump2_N == 1)):
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
+        if((random.randint(1, 20) > 18) & (CONSTANT.en_Relay==True)): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
             CONSTANT.SubThread_pump2.start(1000) # bắt đầu đếm lui
             ControlDevice(3, 1)                 # Bật máy bơm
             CONSTANT.flag_pump2   = 1          
@@ -734,7 +745,7 @@ def Thread_pump2():
 
 def Thread_pump3():
     if((CONSTANT.flag_pump3 == 0) & (CONSTANT.flag_pump3_N == 1)):
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
+        if((random.randint(1, 20) > 18) & (CONSTANT.en_Relay == True)): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
             CONSTANT.SubThread_pump3.start(1000) # bắt đầu đếm lui
             ControlDevice(5, 1)                 # Bật máy bơm
             CONSTANT.flag_pump3   = 1          
@@ -750,7 +761,7 @@ def Thread_pump3():
 
 def Thread_lamp1():
     if((CONSTANT.flag_lamp1 == 0) & (CONSTANT.flag_lamp1_N == 1)):
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
+        if((random.randint(1, 20) > 18) & (CONSTANT.en_Relay == True)): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
             CONSTANT.SubThread_lamp1.start(1000) # bắt đầu đếm lui
             ControlDevice(2, 1)                 # Bật máy bơm
             CONSTANT.flag_lamp1   = 1          
@@ -767,7 +778,7 @@ def Thread_lamp1():
 
 def Thread_lamp2():
     if((CONSTANT.flag_lamp2 == 0) & (CONSTANT.flag_lamp2_N == 1)):
-        if(random.randint(1, 20) > 18): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
+        if((random.randint(1, 20) > 18 )& (CONSTANT.en_Relay==True)): # kiểm tra điều kiện- nhớ phải xét khoảng, đây chưa xét khoảng
             CONSTANT.SubThread_lamp2.start(1000) # bắt đầu đếm lui
             ControlDevice(4, 1)                 # Bật máy bơm
             CONSTANT.flag_lamp2  = 1          
@@ -985,35 +996,36 @@ def Init_api():
     if(response_get[0]["seed_name"]=="tomato"):
         Windowns.app.label.setText("VƯỜN CÀ CHUA")
         Windowns.app.label_48.setText("CÀ CHUA")
-        Windowns.app.label_50.setText("Hạt giống: "+"Cà Chua")
+        Windowns.app.label_50.setText("Hạt giống: Cà Chua")
     elif(response_get[0]["seed_name"]=="pakchoi"):
         Windowns.app.label.setText("VƯỜN CẢI CHÍP")
         Windowns.app.label_48.setText("CẢI CHÍP")
-        Windowns.app.label_50.setText("Hạt giống: "+"Cải Chíp")
+        Windowns.app.label_50.setText("Hạt giống: Cải Chíp")
     elif(response_get[0]["seed_name"]=="brassica"):
         Windowns.app.label.setText("VƯỜN CẢI NGỌT")
         Windowns.app.label_48.setText("CẢI NGỌT")
-        Windowns.app.label_50.setText("Hạt giống: "+"Cải Ngọt")
+        Windowns.app.label_50.setText("Hạt giống: Cải Ngọt")
     elif(response_get[0]["seed_name"]=="cucumber"):
         Windowns.app.label.setText("VƯỜN DƯA CHUỘT")
         Windowns.app.label_48.setText("Dưa Chuột")
-        Windowns.app.label_50.setText("Hạt giống: "+"Dưa Chuột")
+        Windowns.app.label_50.setText("Hạt giống: Dưa Chuột")
     elif(response_get[0]["seed_name"]=="cabbage"):
         Windowns.app.label.setText("VƯỜN BẮP CẢI")
         Windowns.app.label_48.setText("Bắp Cải")
-        Windowns.app.label_50.setText("Hạt giống: "+"Bắp Cải")
+        Windowns.app.label_50.setText("Hạt giống: Bắp Cải")
     else:
         pass
 
 if __name__ == "__main__": # điểm bắt đầu của một chương trình
-    Init_api()
+    
+    # Init_api()
     # requirePort()
     # Init_UI()
     # Init_Lora()
     Init_Button()
-    # Init_Thread()
+    Init_Thread()
     Init_mqtt()
-
+    print(CONSTANT.en_Relay)
 
     '''
     + GateWay red  : 1s bắn data lên một lần

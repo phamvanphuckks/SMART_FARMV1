@@ -55,6 +55,9 @@ flag_pump3_N = 1
 flag_lamp1_N = 1
 flag_lamp2_N = 1
 
+global en_Relay
+en_Relay = False
+
 # global test
 # test = 5
 # Pump1_second = 5

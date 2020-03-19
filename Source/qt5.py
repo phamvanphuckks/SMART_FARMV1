@@ -55,6 +55,7 @@ class qt5Class(QtCore.QObject):
         else:
             self.display_internet(0)
         self.app.label_2.hide()
+        self.app.btn_auto.setStyleSheet("QPushButton {background-color: rgb(229, 229, 229);}")
 
 
     def closeEvent(self, event: QCloseEvent):
