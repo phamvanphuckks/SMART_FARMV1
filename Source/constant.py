@@ -1,7 +1,6 @@
 from PyQt5.QtCore import QTimer, QTime, QThread, pyqtSignal, QDate, Qt
 import random
 
-
 #api
 global auth_token
 
@@ -58,15 +57,17 @@ flag_lamp2_N = 1
 global en_Relay
 en_Relay = False
 
-global Thread_GUI
+global Thread_GUI, Thread_GW,Thread_DB, flag_DB
 Thread_GUI = QTimer()
+Thread_GW  = QTimer()
+Thread_DB  = QTimer()
+flag_DB = 0
 #--------------------------------------------------------------------------------------------------
 global flag_backup # co backup
 global flag_backup_N
 
 flag_backup   = 0
 flag_backup_N = 1
-
 
 global DATA_G00, DATA_G01, DATA_G02
 

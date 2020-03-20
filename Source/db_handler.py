@@ -53,11 +53,17 @@ class DataBase():
             self.cur.execute(cmd)
 
             cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
-            for i in range(1, 11):
+            for i in range(1, 15):
+                if(i == 11): i = 21
+                elif(i == 12): i = 23
+                elif(i == 13): i = 25
+                elif(i == 14): i = 32
+
                 self.cur.execute(cmd, ( str(CONSTANT.DATA_G00["NODE"+str(i)]["node"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["name"]), 
                 str(CONSTANT.DATA_G00["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["value"]), 
                 str(CONSTANT.DATA_G00["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["battery"]),
                 str(CONSTANT.DATA_G00["NODE"+str(i)]["time"]),  syn)
+                
             )
         lock.release()
 
@@ -79,7 +85,12 @@ class DataBase():
             self.cur.execute(cmd)
 
             cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
-            for i in range(11, 21):
+            for i in range(11, 25):
+                if(i == 21): i = 22
+                elif(i == 22): i = 24
+                elif(i == 23): i = 26
+                elif(i == 24): i = 33
+
                 self.cur.execute(cmd, (str(CONSTANT.DATA_G01["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G01["NODE"+str(i)]["name"]), 
                 str(CONSTANT.DATA_G01["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["value"]), 
                 str(CONSTANT.DATA_G01["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["battery"]),
@@ -105,7 +116,11 @@ class DataBase():
             self.curbk.execute(cmd)
 
             cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
-            for i in range(1, 11):
+            for i in range(1, 15):
+                if(i == 11): i = 21
+                elif(i == 12): i = 23
+                elif(i == 13): i = 25
+                elif(i == 14): i = 32
                 self.curbk.execute(cmd, (str(CONSTANT.DATA_G00["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G00["NODE"+str(i)]["name"]), 
                 str(CONSTANT.DATA_G00["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["value"]), 
                 str(CONSTANT.DATA_G00["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G00["NODE"+str(i)]["battery"]),
@@ -131,7 +146,11 @@ class DataBase():
             self.curbk.execute(cmd)
 
             cmd = "INSERT INTO " + table_name + " (node,name,id,value,RF_signal,battery,time,syn) VALUES(?,?,?,?,?,?,?,?)"
-            for i in range(11, 21):
+            for i in range(11, 25):
+                if(i == 21): i = 22
+                elif(i == 22): i = 24
+                elif(i == 23): i = 26
+                elif(i == 24): i = 33
                 self.curbk.execute(cmd, (str(CONSTANT.DATA_G01["NODE"+str(i)]["node"]),str(CONSTANT.DATA_G01["NODE"+str(i)]["name"]), 
                 str(CONSTANT.DATA_G01["NODE"+str(i)]["id"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["value"]), 
                 str(CONSTANT.DATA_G01["NODE"+str(i)]["RF_signal"]), str(CONSTANT.DATA_G01["NODE"+str(i)]["battery"]),

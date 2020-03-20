@@ -37,9 +37,6 @@ MQTT_TOPIC_SEND    = 'send_data'
 MQTT_TOPIC_CONTROL = 'controller'
 MQTT_TOPIC_STATUS  = 'control_status'
 
-
-MQTT_TOPIC_BACKUP  = 'backup_data'
-
 def Init_mqtt():
     global client
     if (check_internet() == True): # kiểm tra internet nếu có gửu cho a vững
@@ -80,12 +77,12 @@ def ControlDevice(device, status): # kiêu kiểu thế này
             pass
     elif(device == 2): # lamp1
         if(status == 1):
-            # GW_Blue.control_RL(1, 1) # GateWay(Xanh) điểu khiển Relay 
+            # GW_Blue.control_RL(24, 1) # GateWay(Xanh) điểu khiển Relay 
             Windowns.UpdatePicture(device, status) # thay đổi trên app
             get_status(28)
             print("RELAY2 ON") 
         elif(status == 0):
-        #            GW_Blue.control_RL(1, 0)
+        #            GW_Blue.control_RL(24, 0)
             Windowns.UpdatePicture(device, status)
             get_status(28)
             print("RELAY2 OFF") 
@@ -160,11 +157,12 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
         "relay_1": {
             "RF_signal": GW_Blue.get_RFsignal(23),
             'value'    : str(GW_Blue.get_status_RL(23,1)),
-            'battery'  : 100
+            'battery'  : 100,
         }
+
         # "relay_2": {
-        #     "RF_signal": GW_Blue.get_RFsignal(28),
-        #     'value'    : str(GW_Blue.get_status_RL(28,1)),
+        #     "RF_signal": GW_Blue.get_RFsignal(24),
+        #     'value'    : str(GW_Blue.get_status_RL(24,1)),
         #     'battery'  : 100
         # }
     }
@@ -188,7 +186,7 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
     if (check_internet() == True): 
         client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG00))
         # client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_dataG01))
-
+        print("get status all")
         print( json.dumps(payload_dataG00))
         # print( json.dumps(payload_dataG01))
 
@@ -204,7 +202,7 @@ def get_status_all(): # lấy trạng thái hiện tại của thiet bi
 '''
 def get_status(pos): 
     global client, GW_Blue
-    # neu ma la 27 phai chinh 5 thanh 27
+
     CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]     = int(GW_Blue.get_status_RL(23, 1))
     CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"] = GW_Blue.get_RFsignal(23, CONSTANT.SENSOR["relay"])
     CONSTANT.DATA_RELAY["NODE" + str(pos)]["id"]        = GW_Blue.get_node_id(23, CONSTANT.SENSOR["relay"])
@@ -217,8 +215,8 @@ def get_status(pos):
             'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "relay_1": {
                 "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"],
-                'value': str(CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]),
-                'battery': 100
+                'value':     str(CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]),
+                'battery': 100,
             }
         }
     elif(pos == 28):
@@ -228,7 +226,7 @@ def get_status(pos):
             'date_sync'  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "relay_2": {
                 "RF_signal": CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"],
-                'value': str(CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]),
+                'value':    str(CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"]),
                 'battery': 100
             }
         }
@@ -273,7 +271,7 @@ def get_status(pos):
         DB.insert_data_row("controller", pos, CONSTANT.DATA_RELAY["NODE" + str(pos)]["name"], CONSTANT.DATA_RELAY["NODE" + str(pos)]["id"],
         CONSTANT.DATA_RELAY["NODE" + str(pos)]["value"], CONSTANT.DATA_RELAY["NODE" + str(pos)]["RF_signal"], 100, 
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "ok")
-        print("connect to internet")
+        print("get status")
         client.publish(MQTT_TOPIC_STATUS, json.dumps(payload_data))
         print(json.dumps(payload_data))
 
@@ -289,36 +287,33 @@ def on_connect(client, userdata, flags, rc):    # subscrie on  topic
     client.subscribe(MQTT_TOPIC_CONTROL)
 
 def on_message(client, userdata, msg):  # received data - chua code xong
+    print("topic")
     print(msg.topic+" "+str(msg.payload))
     data = json.loads(msg.payload.decode('utf-8'))
-    if ("relay_1" in data): 
-        if (data['relay_1']['value'] == '1'):
-            ControlDevice(1, 1)
-        if (data['relay_1']['value'] == '0'):
-            ControlDevice(1, 0)
-    if ("relay_2" in data):
-        if (data['relay_2']['value'] == '1'):
-            ControlDevice(2, 1)
-        if (data['relay_2']['value'] == '0'):
-            ControlDevice(2, 0)
-            print("Máy 2 OFF")
-    if ("relay_3" in data):
-        if (data['relay_3']['value'] == '1'):
-            ControlDevice(3, 1)
-        if (data['relay_3']['value'] == '0'):
-            ControlDevice(3, 0)
-    if ("relay_4" in data):
-        if (data['relay_4']['value'] == '1'):
-            ControlDevice(4, 1)
-        if (data['relay_4']['value'] == '0'):
-            ControlDevice(4, 0)
-    if ("relay_5" in data):
-        if (data['relay_5']['value'] == '1'):
-            ControlDevice(5, 1)
-        if (data['relay_5']['value'] == '0'):
-            ControlDevice(5, 0)
-    else:
-        pass
+    if(data['sub_id'] == "G00"):
+        if ("relay_1" in data): 
+            if (data['relay_1']['value'] == '1'):
+                ControlDevice(1, 1)
+            if (data['relay_1']['value'] == '0'):
+                ControlDevice(1, 0)
+        if ("relay_2" in data):
+            if (data['relay_2']['value'] == '1'):
+                ControlDevice(2, 1)
+            if (data['relay_2']['value'] == '0'):
+                ControlDevice(2, 0)
+
+    if(data['sub_id'] == "G01"):
+        if ("relay_1" in data): 
+            if (data['relay_1']['value'] == '1'):
+                ControlDevice(3, 1)
+            if (data['relay_1']['value'] == '0'):
+                ControlDevice(3, 0)
+        if ("relay_2" in data):
+            if (data['relay_2']['value'] == '1'):
+                ControlDevice(4, 1)
+            if (data['relay_2']['value'] == '0'):
+                ControlDevice(4, 0)
+
 
 def Auto():
     global en_Relay
@@ -446,12 +441,7 @@ def Update_GatewayBlue():
         CONSTANT.DATA_G00["NODE" + str(i)]["RF_signal"]    = GW_Blue.get_RFsignal(i, CONSTANT.SENSOR["soil_moistrure"])
         CONSTANT.DATA_G00["NODE" + str(i)]["id"]           = GW_Blue.get_node_id(i, CONSTANT.SENSOR["soil_moistrure"])
         CONSTANT.DATA_G00["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        time.sleep(0.1)
     CONSTANT.DATA_G00["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if (check_internet() == True): # nếu có mạng gửu Data lên server
-        DB.insert_data_nongtraiG00("nongtrai_G00", "ok")
-    else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-        DB.insert_data_backup_nongtraiG00("backup_nongtrai_G00", "error")
         
     for i in range(11, 21):
         CONSTANT.DATA_G01["NODE" + str(i)]["value"]        = GW_Blue.get_main_parameter(i, CONSTANT.SENSOR["soil_moistrure"])
@@ -459,12 +449,15 @@ def Update_GatewayBlue():
         CONSTANT.DATA_G01["NODE" + str(i)]["RF_signal"]    = GW_Blue.get_RFsignal(i, CONSTANT.SENSOR["soil_moistrure"])
         CONSTANT.DATA_G01["NODE" + str(i)]["id"]           = GW_Blue.get_node_id(i, CONSTANT.SENSOR["soil_moistrure"])
         CONSTANT.DATA_G01["NODE" + str(i)]["time"]         = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        time.sleep(0.1)
     CONSTANT.DATA_G01["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
     if (check_internet() == True): # nếu có mạng gửu Data lên server
         DB.insert_data_nongtraiG01("nongtrai_G01", "ok")  
+        DB.insert_data_nongtraiG00("nongtrai_G00", "ok")
     else:   # nêu không có mạng thì ghi vào cơ sở dữ liệu backup - syn-ERROR
-        DB.insert_data_backup_nongtraiG01("backup_nongtrai_G01", "error")  
+        DB.insert_data_backup_nongtraiG01("backup_nongtrai_G01", "error") 
+        DB.insert_data_backup_nongtraiG00("backup_nongtrai_G00", "error") 
 
 
     # humidity
@@ -537,7 +530,7 @@ def Update_GatewayBlue():
             pass
 
     # #temperature
-    # for i in range(25, 27):
+    for i in range(25, 27):
         if(i==25):
             CONSTANT.DATA_G00["NODE" + str(i)]["value"]        = random.randint(1,100)
             CONSTANT.DATA_G00["NODE" + str(i)]["battery"]      = random.randint(1,100)
@@ -623,10 +616,7 @@ def check_internet():   # kiểm tra internet
     except:
         return False
 
-# nên ghi vào một file text rồi đọc ra - or la fix cung luon
-# COM4
-# COM3
-# thi luc nay com 4 se doc dc la COM4\n
+
 def requirePort(): # Xac dinh COM 
     global GW_Blue_NAME, GW_Red_NAME 
     #su dung viec doc file
@@ -747,6 +737,23 @@ def Thread_lamp2():
     else:
         pass
 
+def Thread_Update():
+    # update GUI
+    # for i in range(1, 11):
+    #     Windowns.Update_SM(CONSTANT.DATA_G00, i, "G00")
+    # for i in range(11, 21):
+    #     Windowns.Update_SM(CONSTANT.DATA_G01, i, "G01")
+
+    # Windowns.Update_H(CONSTANT.DATA_G00, 1, "G00")
+    # Windowns.Update_H(CONSTANT.DATA_G01, 2, "G01")
+
+    # Windowns.Update_L(CONSTANT.DATA_G00, 1, "G00")
+    # Windowns.Update_L(CONSTANT.DATA_G01, 2, "G01")
+
+    # Windowns.Update_T(CONSTANT.DATA_G00, 1, "G00")
+    # Windowns.Update_T(CONSTANT.DATA_G01, 2, "G01")
+    pass
+
 #---backup data --------------------------------------------------------------
 def Synchronous():
     global client
@@ -824,7 +831,6 @@ def Synchronous():
 
 def Backup():
 
-
     Windowns.backup_Synchronous(0)
 
     DB.creat_table("backup_nongtrai_G00")
@@ -877,6 +883,10 @@ def Init_Thread():
     CONSTANT.Thread_pump1.timeout.connect(Thread_pump1)
     CONSTANT.Thread_pump1.start(100)
     CONSTANT.SubThread_pump1.timeout.connect(Windowns.countdown_pump1)
+
+    Thread_GUI = QTimer()
+    Thread_GUI.timeout.connect(Thread_Update)
+    Thread_GUI.start(1000)
 
     # CONSTANT.Thread_pump2.timeout.connect(Thread_pump2)
     # CONSTANT.Thread_pump2.start(100)
@@ -992,7 +1002,7 @@ if __name__ == "__main__": # điểm bắt đầu của một chương trình
 
     blue = QTimer()
     blue.timeout.connect(Update_GatewayBlue)
-    blue.start(100000)   
+    blue.start(10000)   
 # end-mqtt-------------------------------------
 
     Windowns.app.show()
