@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFileDialog, QAction, QGroupBox, QTableWidget, QTableWidgetItem, QWidget, QMessageBox
-from PyQt5.QtCore    import QTimer, QTime, QThread, pyqtSignal, Qt
+from PyQt5.QtCore    import QTimer, QTime, QThread, pyqtSignal, Qt, QObject
 from PyQt5.QtGui     import QPixmap, QCloseEvent, QColor
 from PyQt5           import QtWidgets, uic, QtGui, QtCore
 
@@ -7,8 +7,12 @@ import constant  as CONSTANT
 import sys, socket
 
 
-class qt5Class():
+class qt5Class(QtCore.QObject):
+    # The arguments to pyqtSignal define the types of objects that will be emit'd on that signal
+    my_signal = pyqtSignal(int)
+
     def __init__(self):
+        QtCore.QObject.__init__(self)
         self.App = QtWidgets.QApplication([])
         self.app = uic.loadUi("guis\\main.ui")
         self.app.closeEvent = self.closeEvent # khi close, gọi sự kiện closeEvent
@@ -16,6 +20,29 @@ class qt5Class():
         self.LCD_Number()
         self.initialize()
         # self.Update_RF_Relay()
+
+    def backup_Synchronous(self, value):
+        self.my_signal.connect(self.backup_Synchronous_Slot)
+        self.my_signal.emit(value)
+
+    @QtCore.pyqtSlot(int)
+    def backup_Synchronous_Slot(self, value):
+        if(value==0):
+            self.app.label_12.show()
+            self.app.label_12.setPixmap(QtGui.QPixmap("icons\\backup.png"))
+
+            self.app.label_2.show()
+            self.app.label_2.setText("Backup dữ liệu")   
+            self.app.label_2.setStyleSheet("QLabel {color:rgb(255, 0, 0)}")  
+        elif(value == 1):
+            self.app.label_12.show()
+            self.app.label_12.setPixmap(QtGui.QPixmap("icons\\sync.png"))
+            self.app.label_2.show()
+            self.app.label_2.setText("Đang đồng bộ")
+            self.app.label_2.setStyleSheet("QLabel {color:rgb(0, 170, 0)}") 
+        else:
+            self.app.label_2.hide()
+            self.app.label_12.hide()            
 
     def debugg(self, error, information):
         QMessageBox.critical(self.app, error, information)
@@ -28,6 +55,7 @@ class qt5Class():
         else:
             self.display_internet(0)
         self.app.label_2.hide()
+        self.app.btn_auto.setStyleSheet("QPushButton {background-color: rgb(229, 229, 229);}")
 
 
     def closeEvent(self, event: QCloseEvent):
@@ -552,8 +580,8 @@ class qt5Class():
                     CONSTANT.SubThread_pump1.stop() # dừng bơm lại
                     CONSTANT.flag_pump1   = 0   #trở về trạng thái bắt đầu
                     CONSTANT.flag_pump1_N = 1
-                    CONSTANT.TIME["pump1"]["minute"] = 0    # cập nhập lại biến time
-                    CONSTANT.TIME["pump1"]["second"] = 10
+                    CONSTANT.TIME["pump1"]["minute"] = 2    # cập nhập lại biến time
+                    CONSTANT.TIME["pump1"]["second"] = 0
                     self.app.lcdNumber.hide() 
             else:
                 pass
@@ -567,8 +595,8 @@ class qt5Class():
                     CONSTANT.SubThread_lamp1.stop() # dừng bơm lại
                     CONSTANT.flag_lamp1 = 0 
                     CONSTANT.flag_lamp1_N = 1
-                    CONSTANT.TIME["lamp1"]["minute"] = 0    # cập nhập lại biến time
-                    CONSTANT.TIME["lamp1"]["second"] = 10
+                    CONSTANT.TIME["lamp1"]["minute"] = 2    # cập nhập lại biến time
+                    CONSTANT.TIME["lamp1"]["second"] = 0
                     self.app.lcdNumber_2.hide() 
             else:
                 pass
@@ -582,8 +610,8 @@ class qt5Class():
                     CONSTANT.SubThread_pump2.stop() # dừng bơm lại
                     CONSTANT.flag_pump2 = 0 
                     CONSTANT.flag_pump2_N = 1
-                    CONSTANT.TIME["pump2"]["minute"] = 0    # cập nhập lại biến time
-                    CONSTANT.TIME["pump2"]["second"] = 10                    
+                    CONSTANT.TIME["pump2"]["minute"] = 2    # cập nhập lại biến time
+                    CONSTANT.TIME["pump2"]["second"] = 0                    
                     self.app.lcdNumber_3.hide() 
             else:
                 pass
@@ -597,8 +625,8 @@ class qt5Class():
                     CONSTANT.SubThread_lamp2.stop() # dừng bơm lại
                     CONSTANT.flag_lamp2 = 0 
                     CONSTANT.flag_lamp2_N = 1
-                    CONSTANT.TIME["lamp2"]["minute"] = 0    # cập nhập lại biến time
-                    CONSTANT.TIME["lamp2"]["second"] = 10
+                    CONSTANT.TIME["lamp2"]["minute"] = 2    # cập nhập lại biến time
+                    CONSTANT.TIME["lamp2"]["second"] = 0
                     self.app.lcdNumber_4.hide()
             else:
                 pass
@@ -611,8 +639,8 @@ class qt5Class():
                     CONSTANT.SubThread_pump3.stop() # dừng bơm lại
                     CONSTANT.flag_pump3 = 0 
                     CONSTANT.flag_pump3_N = 1
-                    CONSTANT.TIME["pump3"]["minute"] = 0    # cập nhập lại biến time
-                    CONSTANT.TIME["pump3"]["second"] = 10
+                    CONSTANT.TIME["pump3"]["minute"] = 2    # cập nhập lại biến time
+                    CONSTANT.TIME["pump3"]["second"] = 0
                     self.app.lcdNumber_5.hide() 
             else:
                 pass
@@ -620,32 +648,20 @@ class qt5Class():
             pass
 
 
-    # mới xử lý được từ 2 phút - 00 : nhưng chưa có chỗ nào phục hồi lại 
-    # giá trị 2p đó - bug
+    # format 5:00 - time = ("{0}:{1}".format(m,s))
     def LCD_Number(self):
         global h,m,s
-
         # time = QTime.currentTime()
         # text = time.toString('hh:mm:ss')
         # self.app.lcdNumber.display(text)
         # time = ("{0}:{1}".format(5,"00"))
         # self.app.lcdNumber.setDigitCount(5) # hien thi so dem
 
-        # current_time = datetime.now().strftime("%H:%M:%S")
-        # self.app.lcdNumber_2.display(text)
-        # self.app.lcdNumber_3.display(text)
-        # self.app.lcdNumber_4.display(text)
-        # self.app.lcdNumber_5.display(text)
-
         self.app.lcdNumber.hide()
         self.app.lcdNumber_2.hide()
         self.app.lcdNumber_3.hide()
         self.app.lcdNumber_4.hide()
         self.app.lcdNumber_5.hide()
-        pass
-
-
-    # format 5:00 - time = ("{0}:{1}".format(m,s))
 
     def countdown_pump1(self):
         if (CONSTANT.TIME["pump1"]["second"] > 0):

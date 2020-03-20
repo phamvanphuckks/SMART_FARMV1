@@ -10,11 +10,11 @@ global auth_token
 global TIME, DEVICE
 
 TIME = {
-    "pump1" : {"second":10, "minute":0},
-    "pump2" : {"second":10, "minute":0},
-    "pump3" : {"second":10, "minute":0},
-    "lamp1" : {"second":10, "minute":0},
-    "lamp2" : {"second":10, "minute":0},
+    "pump1" : {"second":0, "minute":2},
+    "pump2" : {"second":0, "minute":2},
+    "pump3" : {"second":0, "minute":2},
+    "lamp1" : {"second":0, "minute":2},
+    "lamp2" : {"second":0, "minute":2},
 } 
 
 global SubThread_pump1, SubThread_pump1, SubThread_pump3
@@ -58,9 +58,8 @@ flag_lamp2_N = 1
 global en_Relay
 en_Relay = False
 
-# global test
-# test = 5
-# Pump1_second = 5
+global Thread_GUI
+Thread_GUI = QTimer()
 #--------------------------------------------------------------------------------------------------
 global flag_backup # co backup
 global flag_backup_N
@@ -110,20 +109,6 @@ DATA_G01 = {
     "NODE24": {"node": 24,"name": "light2",            "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE26": {"node": 26,"name": "temperature2",      "id": 0, "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"},
     "NODE33": {"node": 33,"name": "ph2",               "id": "654321", "value" : 0, "battery" : 0, "RF_signal":"", "time":"", "syn":"error"}
-}
-
-DATA_RELAY_G00 = {
-    "sub_id": "G00",
-    "time"  :  "",
-    "NODE27": {"node": 27,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
-    "NODE29": {"node": 29,"name": "relay3", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"}
-}
-
-DATA_RELAY_G01 = {
-    "sub_id": "G01",
-    "time"  :  "",
-    "NODE28": {"node": 28,"name": "relay1", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"},
-    "NODE30": {"node": 30,"name": "relay3", "id":0,  "value" : 0, "battery": 100, "RF_signal":"NULL", "time":"", "syn":"error"}
 }
 
 
